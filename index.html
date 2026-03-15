@@ -12,7 +12,7 @@
 body{
 margin:0;
 font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto;
-background:radial-gradient(circle,#1a1a1a,#000);
+background:radial-gradient(circle,#1c1c1c,#000);
 color:white;
 }
 
@@ -24,8 +24,7 @@ padding:25px;
 }
 
 .logo{
-width:320px;
-max-width:90%;
+width:300px;
 }
 
 /* LAYOUT */
@@ -40,15 +39,14 @@ padding:25px;
 
 .sidebar{
 width:220px;
-padding:25px;
+padding:20px;
 border-radius:20px;
 background:rgba(255,255,255,0.05);
-backdrop-filter:blur(20px);
+backdrop-filter:blur(25px);
 border:1px solid rgba(255,255,255,0.1);
 }
 
 .sidebar button{
-display:block;
 width:100%;
 margin:10px 0;
 padding:10px;
@@ -60,7 +58,7 @@ cursor:pointer;
 }
 
 .sidebar button:hover{
-background:rgba(255,255,255,0.2);
+background:rgba(255,255,255,0.25);
 }
 
 /* MAIN */
@@ -80,8 +78,8 @@ gap:20px;
 flex:1;
 padding:20px;
 border-radius:20px;
-background:rgba(255,255,255,0.06);
-backdrop-filter:blur(20px);
+background:rgba(255,255,255,0.07);
+backdrop-filter:blur(25px);
 border:1px solid rgba(255,255,255,0.1);
 text-align:center;
 }
@@ -97,15 +95,15 @@ margin-top:20px;
 padding:20px;
 border-radius:20px;
 background:rgba(255,255,255,0.05);
-backdrop-filter:blur(20px);
+backdrop-filter:blur(25px);
 border:1px solid rgba(255,255,255,0.1);
 }
 
-/* INPUTS */
+/* INPUT */
 
 input{
 padding:8px;
-margin:5px;
+margin:6px;
 border:none;
 border-radius:6px;
 background:rgba(255,255,255,0.1);
@@ -126,22 +124,12 @@ input[type=number] {
 
 button.action{
 padding:8px 15px;
-margin-top:8px;
+margin-top:10px;
 border:none;
 border-radius:8px;
-background:rgba(255,255,255,0.2);
+background:rgba(255,255,255,0.25);
 color:white;
 cursor:pointer;
-}
-
-/* SECTIONS */
-
-.section{
-display:none;
-}
-
-.active{
-display:block;
 }
 
 /* TABLE */
@@ -161,6 +149,16 @@ tr{
 border-bottom:1px solid rgba(255,255,255,0.15);
 }
 
+/* SECTIONS */
+
+.section{
+display:none;
+}
+
+.active{
+display:block;
+}
+
 </style>
 
 </head>
@@ -176,9 +174,9 @@ border-bottom:1px solid rgba(255,255,255,0.15);
 <div class="sidebar">
 
 <button onclick="showSection('dashboard')">Dashboard</button>
-<button onclick="showSection('salesSection')">Sales</button>
-<button onclick="showSection('investmentSection')">Investments</button>
-<button onclick="showSection('analyticsSection')">Analytics</button>
+<button onclick="showSection('sales')">Sales</button>
+<button onclick="showSection('investment')">Investment</button>
+<button onclick="showSection('analytics')">Analytics</button>
 
 </div>
 
@@ -192,17 +190,17 @@ border-bottom:1px solid rgba(255,255,255,0.15);
 
 <div class="card">
 <h3>Total Sales</h3>
-<p id="salesTotal">0</p>
+<p id="salesTotal">₹0</p>
 </div>
 
 <div class="card">
 <h3>Total Investment</h3>
-<p id="investmentTotal">0</p>
+<p id="investmentTotal">₹0</p>
 </div>
 
 <div class="card">
-<h3>Profit</h3>
-<p id="profitTotal">0</p>
+<h3>Total Profit</h3>
+<p id="profitTotal">₹0</p>
 </div>
 
 </div>
@@ -211,15 +209,13 @@ border-bottom:1px solid rgba(255,255,255,0.15);
 
 <!-- SALES -->
 
-<div id="salesSection" class="section panel">
+<div id="sales" class="section panel">
 
 <h3>Add Sale</h3>
 
 <input type="date" id="saleDate">
 
-<input type="number" id="saleRate" placeholder="Total Selling Price">
-
-<input type="number" id="saleProfit" placeholder="Profit">
+<input type="number" id="salePrice" placeholder="Selling Price">
 
 <button class="action" onclick="addSale()">Add Sale</button>
 
@@ -227,7 +223,7 @@ border-bottom:1px solid rgba(255,255,255,0.15);
 
 <tr>
 <th>Date</th>
-<th>Total Rate</th>
+<th>Price</th>
 <th>Profit</th>
 </tr>
 
@@ -239,24 +235,29 @@ border-bottom:1px solid rgba(255,255,255,0.15);
 
 <!-- INVESTMENT -->
 
-<div id="investmentSection" class="section panel">
+<div id="investment" class="section panel">
 
-<h3>Add Investment</h3>
+<h3>Investment Per T-Shirt</h3>
 
-<input type="number" id="printing" placeholder="Printing Cost"><br>
-<input type="number" id="product" placeholder="Product Purchase"><br>
-<input type="number" id="packaging" placeholder="Packaging Cost"><br>
-<input type="number" id="other" placeholder="Other Expense"><br>
+<input type="number" id="printingCost" placeholder="Printing Cost">
 
-<button class="action" onclick="addInvestment()">Add Investment</button>
+<input type="number" id="productCost" placeholder="Product Purchase">
+
+<input type="number" id="packagingCost" placeholder="Packaging">
+
+<input type="number" id="otherCost" placeholder="Other Cost">
+
+<button class="action" onclick="saveInvestment()">Save Investment</button>
+
+<p style="margin-top:10px">Cost per T-shirt: ₹<span id="costPerShirt">0</span></p>
 
 </div>
 
 <!-- ANALYTICS -->
 
-<div id="analyticsSection" class="section panel">
+<div id="analytics" class="section panel">
 
-<h3>Monthly Growth</h3>
+<h3>Growth Chart</h3>
 
 <canvas id="growthChart"></canvas>
 
@@ -268,12 +269,10 @@ border-bottom:1px solid rgba(255,255,255,0.15);
 
 <script>
 
-/* NAVIGATION */
-
 function showSection(id){
 
-document.querySelectorAll(".section").forEach(section=>{
-section.classList.remove("active")
+document.querySelectorAll(".section").forEach(s=>{
+s.classList.remove("active")
 })
 
 document.getElementById(id).classList.add("active")
@@ -282,65 +281,61 @@ document.getElementById(id).classList.add("active")
 
 /* DATA */
 
+let costPerShirt=0
 let totalSales=0
 let totalInvestment=0
+let totalProfit=0
+
+function saveInvestment(){
+
+let printing=Number(document.getElementById("printingCost").value)
+let product=Number(document.getElementById("productCost").value)
+let packaging=Number(document.getElementById("packagingCost").value)
+let other=Number(document.getElementById("otherCost").value)
+
+costPerShirt=printing+product+packaging+other
+
+document.getElementById("costPerShirt").innerText=costPerShirt
+
+}
 
 function addSale(){
 
 let date=document.getElementById("saleDate").value
-let rate=Number(document.getElementById("saleRate").value)
-let profit=Number(document.getElementById("saleProfit").value)
+let price=Number(document.getElementById("salePrice").value)
 
-if(!date || !rate){
+if(!date || !price){
+
 alert("Enter date and price")
 return
+
 }
 
-totalSales+=rate
+let profit=price-costPerShirt
 
-let table=document.getElementById("salesTable")
+totalSales+=price
+totalInvestment+=costPerShirt
+totalProfit+=profit
+
+document.getElementById("salesTotal").innerText="₹"+totalSales
+document.getElementById("investmentTotal").innerText="₹"+totalInvestment
+document.getElementById("profitTotal").innerText="₹"+totalProfit
 
 let row=`
 <tr>
 <td>${date}</td>
-<td>₹${rate}</td>
+<td>₹${price}</td>
 <td>₹${profit}</td>
 </tr>
 `
 
-table.innerHTML+=row
-
-updateTotals()
-
-}
-
-function addInvestment(){
-
-let printing=Number(document.getElementById("printing").value)
-let product=Number(document.getElementById("product").value)
-let packaging=Number(document.getElementById("packaging").value)
-let other=Number(document.getElementById("other").value)
-
-totalInvestment+=printing+product+packaging+other
-
-updateTotals()
-
-}
-
-function updateTotals(){
-
-document.getElementById("salesTotal").innerText="₹"+totalSales
-document.getElementById("investmentTotal").innerText="₹"+totalInvestment
-
-let profit=totalSales-totalInvestment
-
-document.getElementById("profitTotal").innerText="₹"+profit
+document.getElementById("salesTable").innerHTML+=row
 
 }
 
 /* CHART */
 
-const ctx=document.getElementById('growthChart')
+const ctx=document.getElementById("growthChart")
 
 new Chart(ctx,{
 type:'line',
