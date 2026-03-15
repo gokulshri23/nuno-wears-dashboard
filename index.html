@@ -16,8 +16,6 @@ background:radial-gradient(circle,#1a1a1a,#000);
 color:white;
 }
 
-/* HEADER */
-
 .header{
 text-align:center;
 padding:25px;
@@ -27,15 +25,11 @@ padding:25px;
 width:300px;
 }
 
-/* LAYOUT */
-
 .container{
 display:flex;
 gap:25px;
 padding:25px;
 }
-
-/* SIDEBAR */
 
 .sidebar{
 width:220px;
@@ -61,13 +55,9 @@ cursor:pointer;
 background:rgba(255,255,255,0.25);
 }
 
-/* MAIN */
-
 .main{
 flex:1;
 }
-
-/* CARDS */
 
 .cards{
 display:flex;
@@ -85,10 +75,8 @@ text-align:center;
 }
 
 .card p{
-font-size:28px;
+font-size:26px;
 }
-
-/* PANELS */
 
 .panel{
 margin-top:20px;
@@ -99,9 +87,7 @@ backdrop-filter:blur(25px);
 border:1px solid rgba(255,255,255,0.1);
 }
 
-/* INPUT */
-
-input{
+input,select{
 padding:8px;
 margin:6px;
 border:none;
@@ -110,16 +96,8 @@ background:rgba(255,255,255,0.1);
 color:white;
 }
 
-/* remove number arrows */
-
-input::-webkit-outer-spin-button,
-input::-webkit-inner-spin-button {
+input::-webkit-inner-spin-button{
 -webkit-appearance:none;
-margin:0;
-}
-
-input[type=number]{
--moz-appearance:textfield;
 }
 
 button.action{
@@ -131,8 +109,6 @@ background:rgba(255,255,255,0.25);
 color:white;
 cursor:pointer;
 }
-
-/* TABLE */
 
 table{
 width:100%;
@@ -148,8 +124,6 @@ text-align:center;
 tr{
 border-bottom:1px solid rgba(255,255,255,0.15);
 }
-
-/* SECTIONS */
 
 .section{
 display:none;
@@ -203,6 +177,11 @@ display:block;
 <p id="profitTotal">₹0</p>
 </div>
 
+<div class="card">
+<h3>Delivery Paid by Company</h3>
+<p id="deliveryInvestment">₹0</p>
+</div>
+
 </div>
 
 </div>
@@ -217,6 +196,15 @@ display:block;
 
 <input type="number" id="salePrice" placeholder="Selling Price">
 
+<input type="number" id="deliveryCharge" placeholder="Delivery Charge">
+
+<select id="deliveryPaidBy">
+
+<option value="customer">Delivery Paid by Customer</option>
+<option value="company">Delivery Paid by Company</option>
+
+</select>
+
 <button class="action" onclick="addSale()">Add Sale</button>
 
 <table>
@@ -224,6 +212,8 @@ display:block;
 <tr>
 <th>Date</th>
 <th>Price</th>
+<th>Delivery</th>
+<th>Paid By</th>
 <th>Profit</th>
 </tr>
 
@@ -245,11 +235,9 @@ display:block;
 
 <input type="number" id="printingCost" placeholder="Printing Cost">
 
-<input type="number" id="shirtCount" placeholder="Number of T-shirts Bought">
-
-<input type="number" id="deliveryCost" placeholder="Delivery Charges">
-
 <input type="number" id="packingCost" placeholder="Packing Cost">
+
+<input type="number" id="shirtCount" placeholder="Number of T-shirts Bought">
 
 <br>
 
@@ -261,7 +249,6 @@ display:block;
 <th>Month</th>
 <th>Purchase</th>
 <th>Printing</th>
-<th>Delivery</th>
 <th>Packing</th>
 <th>Qty</th>
 <th>Cost per Shirt</th>
@@ -278,9 +265,13 @@ display:block;
 
 <div id="analytics" class="section panel">
 
-<h3>Growth Chart</h3>
+<h3>Monthly Sales</h3>
+<canvas id="salesChart"></canvas>
 
-<canvas id="growthChart"></canvas>
+<br><br>
+
+<h3>Monthly Profit</h3>
+<canvas id="profitChart"></canvas>
 
 </div>
 
@@ -300,34 +291,33 @@ document.getElementById(id).classList.add("active")
 
 }
 
-/* DATA */
-
 let costPerShirt=0
 let totalSales=0
 let totalInvestment=0
 let totalProfit=0
+let deliveryInvestment=0
+
+let monthlySales={}
+let monthlyProfit={}
 
 function addInvestment(){
 
 let month=document.getElementById("invMonth").value
 let purchase=Number(document.getElementById("purchaseCost").value)
 let printing=Number(document.getElementById("printingCost").value)
-let qty=Number(document.getElementById("shirtCount").value)
-let delivery=Number(document.getElementById("deliveryCost").value)
 let packing=Number(document.getElementById("packingCost").value)
+let qty=Number(document.getElementById("shirtCount").value)
 
 if(!month || !purchase || !qty){
-
 alert("Enter required fields")
 return
-
 }
 
-let monthlyInvestment = purchase + printing + delivery + packing
+let monthlyInvestment=purchase+printing+packing
 
-costPerShirt = monthlyInvestment / qty
+costPerShirt=monthlyInvestment/qty
 
-totalInvestment += monthlyInvestment
+totalInvestment+=monthlyInvestment
 
 document.getElementById("investmentTotal").innerText="₹"+totalInvestment
 
@@ -336,7 +326,6 @@ let row=`
 <td>${month}</td>
 <td>₹${purchase}</td>
 <td>₹${printing}</td>
-<td>₹${delivery}</td>
 <td>₹${packing}</td>
 <td>${qty}</td>
 <td>₹${costPerShirt.toFixed(2)}</td>
@@ -352,15 +341,20 @@ function addSale(){
 
 let date=document.getElementById("saleDate").value
 let price=Number(document.getElementById("salePrice").value)
+let delivery=Number(document.getElementById("deliveryCharge").value)
+let paidBy=document.getElementById("deliveryPaidBy").value
 
 if(!date || !price){
-
-alert("Enter date and price")
+alert("Enter required fields")
 return
-
 }
 
 let profit=price-costPerShirt
+
+if(paidBy==="company"){
+deliveryInvestment+=delivery
+document.getElementById("deliveryInvestment").innerText="₹"+deliveryInvestment
+}
 
 totalSales+=price
 totalProfit+=profit
@@ -368,10 +362,24 @@ totalProfit+=profit
 document.getElementById("salesTotal").innerText="₹"+totalSales
 document.getElementById("profitTotal").innerText="₹"+totalProfit
 
+let month=date.substring(0,7)
+
+if(!monthlySales[month]){
+monthlySales[month]=0
+monthlyProfit[month]=0
+}
+
+monthlySales[month]+=price
+monthlyProfit[month]+=profit
+
+updateCharts()
+
 let row=`
 <tr>
 <td>${date}</td>
 <td>₹${price}</td>
+<td>₹${delivery}</td>
+<td>${paidBy}</td>
 <td>₹${profit.toFixed(2)}</td>
 </tr>
 `
@@ -380,22 +388,58 @@ document.getElementById("salesTable").innerHTML+=row
 
 }
 
-/* CHART */
+let salesChart
+let profitChart
 
-const ctx=document.getElementById("growthChart")
+function updateCharts(){
 
-new Chart(ctx,{
-type:'line',
+let months=Object.keys(monthlySales)
+
+let salesData=Object.values(monthlySales)
+let profitData=Object.values(monthlyProfit)
+
+if(salesChart){
+salesChart.destroy()
+profitChart.destroy()
+}
+
+salesChart=new Chart(
+document.getElementById("salesChart"),
+{
+type:"line",
 data:{
-labels:['Jan','Feb','Mar','Apr','May','Jun'],
-datasets:[{
-label:'Growth',
-data:[0,0,0,0,0,0],
+labels:months,
+datasets:[
+{
+label:"Monthly Sales",
+data:salesData,
 borderWidth:3,
 tension:0.4
-}]
 }
-})
+]
+}
+}
+)
+
+profitChart=new Chart(
+document.getElementById("profitChart"),
+{
+type:"line",
+data:{
+labels:months,
+datasets:[
+{
+label:"Monthly Profit",
+data:profitData,
+borderWidth:3,
+tension:0.4
+}
+]
+}
+}
+)
+
+}
 
 </script>
 
