@@ -18,19 +18,15 @@ background:radial-gradient(circle,#1a1a1a,#000);
 color:white;
 }
 
-/* HEADER */
-
 .header{
 text-align:center;
 padding:20px;
 }
 
 .logo{
-width:220px;
+width:200px;
 max-width:90%;
 }
-
-/* LAYOUT */
 
 .container{
 display:flex;
@@ -38,7 +34,7 @@ gap:20px;
 padding:20px;
 }
 
-/* SIDEBAR */
+/* sidebar */
 
 .sidebar{
 width:200px;
@@ -60,13 +56,13 @@ color:white;
 cursor:pointer;
 }
 
-/* MAIN */
+/* main */
 
 .main{
 flex:1;
 }
 
-/* DASHBOARD CARDS */
+/* dashboard cards */
 
 .cards{
 display:grid;
@@ -87,7 +83,7 @@ text-align:center;
 font-size:22px;
 }
 
-/* PANELS */
+/* panels */
 
 .panel{
 margin-top:20px;
@@ -98,7 +94,7 @@ backdrop-filter:blur(25px);
 border:1px solid rgba(255,255,255,0.1);
 }
 
-/* INPUTS */
+/* inputs */
 
 input,select{
 padding:8px;
@@ -119,12 +115,18 @@ color:white;
 cursor:pointer;
 }
 
-/* TABLE */
+/* tables */
+
+.table-container{
+width:100%;
+overflow-x:auto;
+}
 
 table{
 width:100%;
-margin-top:20px;
 border-collapse:collapse;
+margin-top:20px;
+min-width:650px;
 }
 
 th,td{
@@ -136,8 +138,6 @@ tr{
 border-bottom:1px solid rgba(255,255,255,0.15);
 }
 
-/* SECTIONS */
-
 .section{
 display:none;
 }
@@ -146,7 +146,7 @@ display:none;
 display:block;
 }
 
-/* MOBILE RESPONSIVE */
+/* mobile */
 
 @media(max-width:900px){
 
@@ -161,9 +161,8 @@ justify-content:space-around;
 }
 
 .sidebar button{
-width:auto;
 flex:1;
-margin:5px;
+margin:4px;
 }
 
 .cards{
@@ -189,6 +188,7 @@ grid-template-columns:1fr 1fr;
 <button onclick="showSection('dashboard')">Dashboard</button>
 <button onclick="showSection('sales')">Sales</button>
 <button onclick="showSection('investment')">Investment</button>
+<button onclick="showSection('inventory')">Inventory</button>
 <button onclick="showSection('analytics')">Analytics</button>
 
 </div>
@@ -217,7 +217,7 @@ grid-template-columns:1fr 1fr;
 </div>
 
 <div class="card">
-<h3>T-shirts Sold</h3>
+<h3>T-Shirts Sold</h3>
 <p id="shirtSold">0</p>
 </div>
 
@@ -251,6 +251,8 @@ grid-template-columns:1fr 1fr;
 
 <button class="action" onclick="addSale()">Add Sale</button>
 
+<div class="table-container">
+
 <table>
 
 <tr>
@@ -265,6 +267,8 @@ grid-template-columns:1fr 1fr;
 <tbody id="salesTable"></tbody>
 
 </table>
+
+</div>
 
 </div>
 
@@ -284,9 +288,9 @@ grid-template-columns:1fr 1fr;
 
 <input type="number" id="shirtCount" placeholder="T-shirt Bought">
 
-<br>
-
 <button class="action" onclick="addInvestment()">Add Investment</button>
+
+<div class="table-container">
 
 <table>
 
@@ -303,6 +307,39 @@ grid-template-columns:1fr 1fr;
 <tbody id="investmentTable"></tbody>
 
 </table>
+
+</div>
+
+</div>
+
+<!-- INVENTORY -->
+
+<div id="inventory" class="section panel">
+
+<h3>Inventory Tracker</h3>
+
+<input type="text" id="designName" placeholder="Printed Design Name">
+
+<input type="number" id="designCount" placeholder="Printed Quantity">
+
+<button class="action" onclick="addInventory()">Add Design</button>
+
+<div class="table-container">
+
+<table>
+
+<tr>
+<th>Design Name</th>
+<th>Printed Count</th>
+<th>Sold Count</th>
+<th>Remaining</th>
+</tr>
+
+<tbody id="inventoryTable"></tbody>
+
+</table>
+
+</div>
 
 </div>
 
@@ -327,13 +364,10 @@ grid-template-columns:1fr 1fr;
 <script>
 
 function showSection(id){
-
 document.querySelectorAll(".section").forEach(s=>{
 s.classList.remove("active")
 })
-
 document.getElementById(id).classList.add("active")
-
 }
 
 let costPerShirt=0
@@ -346,6 +380,8 @@ let shirtsSold=0
 let monthlySales={}
 let monthlyProfit={}
 
+let inventory={}
+
 /* INVESTMENT */
 
 function addInvestment(){
@@ -355,11 +391,6 @@ let purchase=Number(document.getElementById("purchaseCost").value)
 let printing=Number(document.getElementById("printingCost").value)
 let packing=Number(document.getElementById("packingCost").value)
 let qty=Number(document.getElementById("shirtCount").value)
-
-if(!month || !purchase || !qty){
-alert("Enter required fields")
-return
-}
 
 let monthlyInvestment=purchase+printing+packing
 
@@ -395,30 +426,25 @@ let qty=Number(document.getElementById("saleQty").value)
 let delivery=Number(document.getElementById("deliveryCharge").value)
 let paidBy=document.getElementById("deliveryPaidBy").value
 
-if(!date || !price || !qty){
-alert("Enter required fields")
-return
-}
-
 let saleValue=price*qty
+
 let profit
 
 if(paidBy==="company"){
 
-profit = (price - costPerShirt)*qty - delivery
-
-deliveryInvestment += delivery
+profit=(price-costPerShirt)*qty-delivery
+deliveryInvestment+=delivery
 document.getElementById("deliveryInvestment").innerText="₹"+deliveryInvestment
 
 }else{
 
-profit = (price - costPerShirt)*qty
+profit=(price-costPerShirt)*qty
 
 }
 
-totalSales += saleValue
-totalProfit += profit
-shirtsSold += qty
+totalSales+=saleValue
+totalProfit+=profit
+shirtsSold+=qty
 
 document.getElementById("salesTotal").innerText="₹"+totalSales
 document.getElementById("profitTotal").innerText="₹"+totalProfit
@@ -448,6 +474,42 @@ let row=`
 `
 
 document.getElementById("salesTable").innerHTML+=row
+
+}
+
+/* INVENTORY */
+
+function addInventory(){
+
+let name=document.getElementById("designName").value
+let count=Number(document.getElementById("designCount").value)
+
+inventory[name]={printed:count,sold:0}
+
+renderInventory()
+
+}
+
+function renderInventory(){
+
+let html=""
+
+for(let d in inventory){
+
+let remaining=inventory[d].printed-inventory[d].sold
+
+html+=`
+<tr>
+<td>${d}</td>
+<td>${inventory[d].printed}</td>
+<td>${inventory[d].sold}</td>
+<td>${remaining}</td>
+</tr>
+`
+
+}
+
+document.getElementById("inventoryTable").innerHTML=html
 
 }
 
