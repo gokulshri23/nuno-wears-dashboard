@@ -12,7 +12,7 @@
 body{
 margin:0;
 font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto;
-background:radial-gradient(circle,#1c1c1c,#000);
+background:radial-gradient(circle,#1a1a1a,#000);
 color:white;
 }
 
@@ -78,8 +78,8 @@ gap:20px;
 flex:1;
 padding:20px;
 border-radius:20px;
-background:rgba(255,255,255,0.07);
-backdrop-filter:blur(25px);
+background:rgba(255,255,255,0.06);
+backdrop-filter:blur(20px);
 border:1px solid rgba(255,255,255,0.1);
 text-align:center;
 }
@@ -110,16 +110,16 @@ background:rgba(255,255,255,0.1);
 color:white;
 }
 
-/* REMOVE NUMBER ARROWS */
+/* remove number arrows */
 
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
--webkit-appearance: none;
-margin: 0;
+-webkit-appearance:none;
+margin:0;
 }
 
-input[type=number] {
--moz-appearance: textfield;
+input[type=number]{
+-moz-appearance:textfield;
 }
 
 button.action{
@@ -237,19 +237,36 @@ display:block;
 
 <div id="investment" class="section panel">
 
-<h3>Investment Per T-Shirt</h3>
+<h3>Monthly Investment</h3>
 
-<input type="number" id="printingCost" placeholder="Printing Cost">
+<input type="month" id="invMonth">
 
-<input type="number" id="productCost" placeholder="Product Purchase">
+<input type="number" id="purchaseCost" placeholder="Total T-shirt Purchase Cost">
 
-<input type="number" id="packagingCost" placeholder="Packaging">
+<input type="number" id="shirtCount" placeholder="Number of T-shirts Bought">
 
-<input type="number" id="otherCost" placeholder="Other Cost">
+<input type="number" id="deliveryCost" placeholder="Delivery Charges">
 
-<button class="action" onclick="saveInvestment()">Save Investment</button>
+<input type="number" id="packingCost" placeholder="Packing Cost">
 
-<p style="margin-top:10px">Cost per T-shirt: ₹<span id="costPerShirt">0</span></p>
+<br>
+
+<button class="action" onclick="addInvestment()">Add Investment</button>
+
+<table>
+
+<tr>
+<th>Month</th>
+<th>Purchase</th>
+<th>Delivery</th>
+<th>Packing</th>
+<th>Qty</th>
+<th>Cost per Shirt</th>
+</tr>
+
+<tbody id="investmentTable"></tbody>
+
+</table>
 
 </div>
 
@@ -286,16 +303,37 @@ let totalSales=0
 let totalInvestment=0
 let totalProfit=0
 
-function saveInvestment(){
+function addInvestment(){
 
-let printing=Number(document.getElementById("printingCost").value)
-let product=Number(document.getElementById("productCost").value)
-let packaging=Number(document.getElementById("packagingCost").value)
-let other=Number(document.getElementById("otherCost").value)
+let month=document.getElementById("invMonth").value
+let purchase=Number(document.getElementById("purchaseCost").value)
+let qty=Number(document.getElementById("shirtCount").value)
+let delivery=Number(document.getElementById("deliveryCost").value)
+let packing=Number(document.getElementById("packingCost").value)
 
-costPerShirt=printing+product+packaging+other
+if(!month || !purchase || !qty){
 
-document.getElementById("costPerShirt").innerText=costPerShirt
+alert("Enter required fields")
+return
+
+}
+
+let total=purchase+delivery+packing
+
+costPerShirt=total/qty
+
+let row=`
+<tr>
+<td>${month}</td>
+<td>₹${purchase}</td>
+<td>₹${delivery}</td>
+<td>₹${packing}</td>
+<td>${qty}</td>
+<td>₹${costPerShirt.toFixed(2)}</td>
+</tr>
+`
+
+document.getElementById("investmentTable").innerHTML+=row
 
 }
 
@@ -325,7 +363,7 @@ let row=`
 <tr>
 <td>${date}</td>
 <td>₹${price}</td>
-<td>₹${profit}</td>
+<td>₹${profit.toFixed(2)}</td>
 </tr>
 `
 
@@ -353,5 +391,4 @@ tension:0.4
 </script>
 
 </body>
-
 </html>
