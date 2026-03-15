@@ -243,6 +243,8 @@ display:block;
 
 <input type="number" id="purchaseCost" placeholder="Total T-shirt Purchase Cost">
 
+<input type="number" id="printingCost" placeholder="Printing Cost">
+
 <input type="number" id="shirtCount" placeholder="Number of T-shirts Bought">
 
 <input type="number" id="deliveryCost" placeholder="Delivery Charges">
@@ -258,10 +260,12 @@ display:block;
 <tr>
 <th>Month</th>
 <th>Purchase</th>
+<th>Printing</th>
 <th>Delivery</th>
 <th>Packing</th>
 <th>Qty</th>
 <th>Cost per Shirt</th>
+<th>Total Investment</th>
 </tr>
 
 <tbody id="investmentTable"></tbody>
@@ -307,6 +311,7 @@ function addInvestment(){
 
 let month=document.getElementById("invMonth").value
 let purchase=Number(document.getElementById("purchaseCost").value)
+let printing=Number(document.getElementById("printingCost").value)
 let qty=Number(document.getElementById("shirtCount").value)
 let delivery=Number(document.getElementById("deliveryCost").value)
 let packing=Number(document.getElementById("packingCost").value)
@@ -318,18 +323,24 @@ return
 
 }
 
-let total=purchase+delivery+packing
+let monthlyInvestment = purchase + printing + delivery + packing
 
-costPerShirt=total/qty
+costPerShirt = monthlyInvestment / qty
+
+totalInvestment += monthlyInvestment
+
+document.getElementById("investmentTotal").innerText="₹"+totalInvestment
 
 let row=`
 <tr>
 <td>${month}</td>
 <td>₹${purchase}</td>
+<td>₹${printing}</td>
 <td>₹${delivery}</td>
 <td>₹${packing}</td>
 <td>${qty}</td>
 <td>₹${costPerShirt.toFixed(2)}</td>
+<td>₹${monthlyInvestment}</td>
 </tr>
 `
 
@@ -352,11 +363,9 @@ return
 let profit=price-costPerShirt
 
 totalSales+=price
-totalInvestment+=costPerShirt
 totalProfit+=profit
 
 document.getElementById("salesTotal").innerText="₹"+totalSales
-document.getElementById("investmentTotal").innerText="₹"+totalInvestment
 document.getElementById("profitTotal").innerText="₹"+totalProfit
 
 let row=`
