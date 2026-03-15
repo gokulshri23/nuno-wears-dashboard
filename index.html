@@ -18,20 +18,24 @@ background:radial-gradient(circle,#1a1a1a,#000);
 color:white;
 }
 
+/* header */
+
 .header{
 text-align:center;
 padding:20px;
 }
 
 .logo{
-width:200px;
-max-width:90%;
+width:180px;
+max-width:80%;
 }
+
+/* layout */
 
 .container{
 display:flex;
 gap:20px;
-padding:20px;
+padding:15px;
 }
 
 /* sidebar */
@@ -41,13 +45,13 @@ width:200px;
 padding:15px;
 border-radius:20px;
 background:rgba(255,255,255,0.05);
-backdrop-filter:blur(25px);
+backdrop-filter:blur(20px);
 border:1px solid rgba(255,255,255,0.1);
 }
 
 .sidebar button{
 width:100%;
-margin:8px 0;
+margin:6px 0;
 padding:10px;
 border:none;
 border-radius:10px;
@@ -62,43 +66,47 @@ cursor:pointer;
 flex:1;
 }
 
-/* dashboard cards */
+/* cards */
 
 .cards{
 display:grid;
 grid-template-columns:repeat(5,1fr);
-gap:15px;
+gap:12px;
 }
 
 .card{
-padding:18px;
-border-radius:18px;
+padding:15px;
+border-radius:15px;
 background:rgba(255,255,255,0.06);
-backdrop-filter:blur(20px);
 border:1px solid rgba(255,255,255,0.1);
 text-align:center;
 }
 
 .card p{
-font-size:22px;
+font-size:20px;
 }
 
 /* panels */
 
 .panel{
 margin-top:20px;
-padding:20px;
-border-radius:18px;
+padding:15px;
+border-radius:15px;
 background:rgba(255,255,255,0.05);
-backdrop-filter:blur(25px);
 border:1px solid rgba(255,255,255,0.1);
 }
 
 /* inputs */
 
+.form-grid{
+display:grid;
+grid-template-columns:repeat(5,1fr);
+gap:8px;
+margin-top:10px;
+}
+
 input,select{
 padding:8px;
-margin:6px;
 border:none;
 border-radius:6px;
 background:rgba(255,255,255,0.1);
@@ -106,8 +114,7 @@ color:white;
 }
 
 button.action{
-padding:8px 15px;
-margin-top:10px;
+padding:9px;
 border:none;
 border-radius:8px;
 background:rgba(255,255,255,0.25);
@@ -118,7 +125,6 @@ cursor:pointer;
 /* tables */
 
 .table-container{
-width:100%;
 overflow-x:auto;
 }
 
@@ -130,13 +136,15 @@ min-width:650px;
 }
 
 th,td{
-padding:10px;
+padding:8px;
 text-align:center;
 }
 
 tr{
 border-bottom:1px solid rgba(255,255,255,0.15);
 }
+
+/* sections */
 
 .section{
 display:none;
@@ -146,7 +154,7 @@ display:none;
 display:block;
 }
 
-/* mobile */
+/* MOBILE */
 
 @media(max-width:900px){
 
@@ -157,15 +165,20 @@ flex-direction:column;
 .sidebar{
 display:flex;
 width:100%;
-justify-content:space-around;
+overflow:auto;
 }
 
 .sidebar button{
 flex:1;
-margin:4px;
+margin:3px;
+font-size:12px;
 }
 
 .cards{
+grid-template-columns:1fr 1fr;
+}
+
+.form-grid{
 grid-template-columns:1fr 1fr;
 }
 
@@ -178,7 +191,7 @@ grid-template-columns:1fr 1fr;
 <body>
 
 <div class="header">
-<img src="nuno-logo.png" class="logo">
+<h2>Nuno Wears Dashboard</h2>
 </div>
 
 <div class="container">
@@ -217,7 +230,7 @@ grid-template-columns:1fr 1fr;
 </div>
 
 <div class="card">
-<h3>T-Shirts Sold</h3>
+<h3>T-shirts Sold</h3>
 <p id="shirtSold">0</p>
 </div>
 
@@ -236,20 +249,26 @@ grid-template-columns:1fr 1fr;
 
 <h3>Add Sale</h3>
 
+<div class="form-grid">
+
 <input type="date" id="saleDate">
 
-<input type="number" id="salePrice" placeholder="Selling Price">
+<select id="designSelect"></select>
 
-<input type="number" id="saleQty" placeholder="T-shirt Count">
+<input type="number" id="salePrice" placeholder="Price">
 
-<input type="number" id="deliveryCharge" placeholder="Delivery Charge">
+<input type="number" id="saleQty" placeholder="Qty">
+
+<input type="number" id="deliveryCharge" placeholder="Delivery">
 
 <select id="deliveryPaidBy">
-<option value="customer">Customer Pays Delivery</option>
-<option value="company">Company Pays Delivery</option>
+<option value="customer">Customer</option>
+<option value="company">Company</option>
 </select>
 
 <button class="action" onclick="addSale()">Add Sale</button>
+
+</div>
 
 <div class="table-container">
 
@@ -257,10 +276,10 @@ grid-template-columns:1fr 1fr;
 
 <tr>
 <th>Date</th>
+<th>Design</th>
 <th>Price</th>
 <th>Qty</th>
 <th>Delivery</th>
-<th>Paid By</th>
 <th>Profit</th>
 </tr>
 
@@ -278,17 +297,17 @@ grid-template-columns:1fr 1fr;
 
 <h3>Monthly Investment</h3>
 
+<div class="form-grid">
+
 <input type="month" id="invMonth">
+<input type="number" id="purchaseCost" placeholder="Purchase">
+<input type="number" id="printingCost" placeholder="Printing">
+<input type="number" id="packingCost" placeholder="Packing">
+<input type="number" id="shirtCount" placeholder="Qty">
 
-<input type="number" id="purchaseCost" placeholder="Purchase Cost">
+<button class="action" onclick="addInvestment()">Add</button>
 
-<input type="number" id="printingCost" placeholder="Printing Cost">
-
-<input type="number" id="packingCost" placeholder="Packing Cost">
-
-<input type="number" id="shirtCount" placeholder="T-shirt Bought">
-
-<button class="action" onclick="addInvestment()">Add Investment</button>
+</div>
 
 <div class="table-container">
 
@@ -316,22 +335,26 @@ grid-template-columns:1fr 1fr;
 
 <div id="inventory" class="section panel">
 
-<h3>Inventory Tracker</h3>
+<h3>Inventory</h3>
 
-<input type="text" id="designName" placeholder="Printed Design Name">
+<div class="form-grid">
 
-<input type="number" id="designCount" placeholder="Printed Quantity">
+<input type="text" id="designName" placeholder="Design Name">
+
+<input type="number" id="designCount" placeholder="Printed Qty">
 
 <button class="action" onclick="addInventory()">Add Design</button>
+
+</div>
 
 <div class="table-container">
 
 <table>
 
 <tr>
-<th>Design Name</th>
-<th>Printed Count</th>
-<th>Sold Count</th>
+<th>Design</th>
+<th>Printed</th>
+<th>Sold</th>
 <th>Remaining</th>
 </tr>
 
@@ -347,12 +370,12 @@ grid-template-columns:1fr 1fr;
 
 <div id="analytics" class="section panel">
 
-<h3>Monthly Sales</h3>
+<h3>Sales Growth</h3>
 <canvas id="salesChart"></canvas>
 
-<br><br>
+<br>
 
-<h3>Monthly Profit</h3>
+<h3>Profit Growth</h3>
 <canvas id="profitChart"></canvas>
 
 </div>
@@ -363,17 +386,19 @@ grid-template-columns:1fr 1fr;
 
 <script>
 
+/* navigation */
+
 function showSection(id){
-document.querySelectorAll(".section").forEach(s=>{
-s.classList.remove("active")
-})
+document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"))
 document.getElementById(id).classList.add("active")
 }
 
+/* variables */
+
 let costPerShirt=0
 let totalSales=0
-let totalInvestment=0
 let totalProfit=0
+let totalInvestment=0
 let deliveryInvestment=0
 let shirtsSold=0
 
@@ -386,94 +411,31 @@ let inventory={}
 
 function addInvestment(){
 
-let month=document.getElementById("invMonth").value
-let purchase=Number(document.getElementById("purchaseCost").value)
-let printing=Number(document.getElementById("printingCost").value)
-let packing=Number(document.getElementById("packingCost").value)
-let qty=Number(document.getElementById("shirtCount").value)
+let month=invMonth.value
+let purchase=Number(purchaseCost.value)
+let printing=Number(printingCost.value)
+let packing=Number(packingCost.value)
+let qty=Number(shirtCount.value)
 
-let monthlyInvestment=purchase+printing+packing
+let total=purchase+printing+packing
 
-costPerShirt=monthlyInvestment/qty
+costPerShirt=total/qty
 
-totalInvestment+=monthlyInvestment
+totalInvestment+=total
 
-document.getElementById("investmentTotal").innerText="₹"+totalInvestment
+investmentTotal.innerText="₹"+totalInvestment
 
-let row=`
+investmentTable.innerHTML+=`
 <tr>
 <td>${month}</td>
-<td>₹${purchase}</td>
-<td>₹${printing}</td>
-<td>₹${packing}</td>
+<td>${purchase}</td>
+<td>${printing}</td>
+<td>${packing}</td>
 <td>${qty}</td>
-<td>₹${costPerShirt.toFixed(2)}</td>
-<td>₹${monthlyInvestment}</td>
+<td>${costPerShirt.toFixed(2)}</td>
+<td>${total}</td>
 </tr>
 `
-
-document.getElementById("investmentTable").innerHTML+=row
-
-}
-
-/* SALES */
-
-function addSale(){
-
-let date=document.getElementById("saleDate").value
-let price=Number(document.getElementById("salePrice").value)
-let qty=Number(document.getElementById("saleQty").value)
-let delivery=Number(document.getElementById("deliveryCharge").value)
-let paidBy=document.getElementById("deliveryPaidBy").value
-
-let saleValue=price*qty
-
-let profit
-
-if(paidBy==="company"){
-
-profit=(price-costPerShirt)*qty-delivery
-deliveryInvestment+=delivery
-document.getElementById("deliveryInvestment").innerText="₹"+deliveryInvestment
-
-}else{
-
-profit=(price-costPerShirt)*qty
-
-}
-
-totalSales+=saleValue
-totalProfit+=profit
-shirtsSold+=qty
-
-document.getElementById("salesTotal").innerText="₹"+totalSales
-document.getElementById("profitTotal").innerText="₹"+totalProfit
-document.getElementById("shirtSold").innerText=shirtsSold
-
-let month=date.substring(0,7)
-
-if(!monthlySales[month]){
-monthlySales[month]=0
-monthlyProfit[month]=0
-}
-
-monthlySales[month]+=saleValue
-monthlyProfit[month]+=profit
-
-updateCharts()
-
-let row=`
-<tr>
-<td>${date}</td>
-<td>₹${price}</td>
-<td>${qty}</td>
-<td>₹${delivery}</td>
-<td>${paidBy}</td>
-<td>₹${profit.toFixed(2)}</td>
-</tr>
-`
-
-document.getElementById("salesTable").innerHTML+=row
 
 }
 
@@ -481,12 +443,31 @@ document.getElementById("salesTable").innerHTML+=row
 
 function addInventory(){
 
-let name=document.getElementById("designName").value
-let count=Number(document.getElementById("designCount").value)
+let name=designName.value
+let qty=Number(designCount.value)
 
-inventory[name]={printed:count,sold:0}
+inventory[name]={printed:qty,sold:0}
 
+updateDesignDropdown()
 renderInventory()
+
+}
+
+function updateDesignDropdown(){
+
+let select=document.getElementById("designSelect")
+
+select.innerHTML=""
+
+for(let d in inventory){
+
+let option=document.createElement("option")
+option.value=d
+option.textContent=d
+
+select.appendChild(option)
+
+}
 
 }
 
@@ -509,11 +490,89 @@ html+=`
 
 }
 
-document.getElementById("inventoryTable").innerHTML=html
+inventoryTable.innerHTML=html
 
 }
 
-/* CHARTS */
+/* SALES */
+
+function addSale(){
+
+let date=saleDate.value
+let design=designSelect.value
+let price=Number(salePrice.value)
+let qty=Number(saleQty.value)
+let delivery=Number(deliveryCharge.value)
+let paidBy=deliveryPaidBy.value
+
+if(!inventory[design]){
+alert("Design not found")
+return
+}
+
+if(inventory[design].printed-inventory[design].sold<qty){
+alert("Not enough stock")
+return
+}
+
+inventory[design].sold+=qty
+renderInventory()
+
+let saleValue=price*qty
+
+let profit
+
+if(paidBy==="company"){
+
+profit=(price-costPerShirt)*qty-delivery
+
+deliveryInvestment+=delivery
+deliveryInvestmentText()
+
+}else{
+
+profit=(price-costPerShirt)*qty
+
+}
+
+totalSales+=saleValue
+totalProfit+=profit
+shirtsSold+=qty
+
+salesTotal.innerText="₹"+totalSales
+profitTotal.innerText="₹"+totalProfit
+shirtSold.innerText=shirtsSold
+
+let month=date.substring(0,7)
+
+if(!monthlySales[month]){
+monthlySales[month]=0
+monthlyProfit[month]=0
+}
+
+monthlySales[month]+=saleValue
+monthlyProfit[month]+=profit
+
+updateCharts()
+
+salesTable.innerHTML+=`
+<tr>
+<td>${date}</td>
+<td>${design}</td>
+<td>${price}</td>
+<td>${qty}</td>
+<td>${delivery}</td>
+<td>${profit.toFixed(2)}</td>
+</tr>
+`
+
+}
+
+function deliveryInvestmentText(){
+document.getElementById("deliveryInvestment").innerText="₹"+deliveryInvestment
+}
+
+/* charts */
 
 let salesChart
 let profitChart
@@ -531,36 +590,24 @@ profitChart.destroy()
 }
 
 salesChart=new Chart(
-document.getElementById("salesChart"),
+salesChartCanvas=document.getElementById("salesChart"),
 {
 type:"line",
 data:{
 labels:months,
-datasets:[{
-label:"Monthly Sales",
-data:salesData,
-borderWidth:3,
-tension:0.4
-}]
+datasets:[{label:"Sales",data:salesData,borderWidth:3}]
 }
-}
-)
+})
 
 profitChart=new Chart(
-document.getElementById("profitChart"),
+profitChartCanvas=document.getElementById("profitChart"),
 {
 type:"line",
 data:{
 labels:months,
-datasets:[{
-label:"Monthly Profit",
-data:profitData,
-borderWidth:3,
-tension:0.4
-}]
+datasets:[{label:"Profit",data:profitData,borderWidth:3}]
 }
-}
-)
+})
 
 }
 
