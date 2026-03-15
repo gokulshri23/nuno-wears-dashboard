@@ -11,14 +11,12 @@
 
 <style>
 
-*{
-box-sizing:border-box;
-}
+*{box-sizing:border-box;}
 
 body{
 margin:0;
-font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto;
-background:radial-gradient(circle,#1a1a1a,#000);
+font-family:Arial;
+background:#0a0a0a;
 color:white;
 overflow-x:hidden;
 }
@@ -36,28 +34,25 @@ padding:15px;
 display:flex;
 gap:15px;
 padding:15px;
-max-width:1200px;
-margin:auto;
 }
 
 /* SIDEBAR */
 
 .sidebar{
 width:180px;
-padding:12px;
-border-radius:15px;
-background:rgba(255,255,255,0.05);
-border:1px solid rgba(255,255,255,0.1);
+background:#111;
+padding:10px;
+border-radius:10px;
 }
 
 .sidebar button{
 width:100%;
 margin:5px 0;
-padding:9px;
+padding:10px;
 border:none;
-border-radius:8px;
-background:rgba(255,255,255,0.1);
+background:#222;
 color:white;
+border-radius:6px;
 cursor:pointer;
 }
 
@@ -65,10 +60,9 @@ cursor:pointer;
 
 .main{
 flex:1;
-min-width:0;
 }
 
-/* DASHBOARD CARDS */
+/* DASHBOARD */
 
 .cards{
 display:grid;
@@ -77,77 +71,63 @@ gap:10px;
 }
 
 .card{
-padding:14px;
-border-radius:12px;
-background:rgba(255,255,255,0.06);
-border:1px solid rgba(255,255,255,0.1);
+background:#151515;
+padding:15px;
+border-radius:10px;
 text-align:center;
-}
-
-.card p{
-font-size:18px;
-margin:5px 0 0;
 }
 
 /* PANELS */
 
 .panel{
 margin-top:15px;
+background:#151515;
 padding:15px;
-border-radius:12px;
-background:rgba(255,255,255,0.05);
-border:1px solid rgba(255,255,255,0.1);
+border-radius:10px;
 }
 
-/* FORM GRID */
+/* FORMS */
 
 .form-grid{
 display:grid;
 grid-template-columns:repeat(4,1fr);
 gap:8px;
-margin-top:10px;
 }
 
 input,select{
-width:100%;
 padding:8px;
 border:none;
-border-radius:6px;
-background:rgba(255,255,255,0.1);
+background:#222;
 color:white;
+border-radius:6px;
+width:100%;
 }
 
 button.action{
-padding:9px;
-border:none;
-border-radius:8px;
-background:rgba(255,255,255,0.25);
+background:#444;
 color:white;
+border:none;
+padding:8px;
+border-radius:6px;
 cursor:pointer;
 }
 
 /* TABLE */
 
 .table-container{
-width:100%;
 overflow-x:auto;
 }
 
 table{
 width:100%;
 border-collapse:collapse;
-margin-top:15px;
 min-width:600px;
 }
 
 th,td{
 padding:8px;
 text-align:center;
-font-size:13px;
-}
-
-tr{
-border-bottom:1px solid rgba(255,255,255,0.15);
+border-bottom:1px solid #333;
 }
 
 /* SECTIONS */
@@ -160,25 +140,23 @@ display:none;
 display:block;
 }
 
-/* MOBILE FIX */
+/* MOBILE */
 
 @media(max-width:900px){
 
 .container{
 flex-direction:column;
-padding:10px;
 }
 
 .sidebar{
 display:flex;
-width:100%;
 overflow-x:auto;
+width:100%;
 }
 
 .sidebar button{
 flex:1;
 font-size:12px;
-margin:3px;
 }
 
 .cards{
@@ -187,10 +165,6 @@ grid-template-columns:1fr 1fr;
 
 .form-grid{
 grid-template-columns:1fr 1fr;
-}
-
-table{
-min-width:500px;
 }
 
 }
@@ -206,6 +180,8 @@ min-width:500px;
 </div>
 
 <div class="container">
+
+<!-- SIDEBAR -->
 
 <div class="sidebar">
 
@@ -385,13 +361,18 @@ min-width:500px;
 
 <div id="analytics" class="section panel">
 
-<h3>Sales Growth</h3>
+<h3>Monthly Sales Growth</h3>
 <canvas id="salesChart"></canvas>
 
 <br>
 
-<h3>Profit Growth</h3>
+<h3>Monthly Profit Growth</h3>
 <canvas id="profitChart"></canvas>
+
+<br>
+
+<h3>Daily Sales Growth</h3>
+<canvas id="dailyChart"></canvas>
 
 </div>
 
@@ -401,14 +382,14 @@ min-width:500px;
 
 <script>
 
-/* navigation */
+/* NAVIGATION */
 
 function showSection(id){
 document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"))
 document.getElementById(id).classList.add("active")
 }
 
-/* variables */
+/* VARIABLES */
 
 let costPerShirt=0
 let totalSales=0
@@ -419,6 +400,7 @@ let shirtsSold=0
 
 let monthlySales={}
 let monthlyProfit={}
+let dailySales={}
 
 let inventory={}
 
@@ -512,6 +494,7 @@ inventoryTable.innerHTML=html
 
 function addSale(){
 
+let date=saleDate.value
 let design=designSelect.value
 let price=Number(salePrice.value)
 let qty=Number(saleQty.value)
@@ -533,9 +516,7 @@ let profit
 if(paidBy==="company"){
 
 profit=(price-costPerShirt)*qty-delivery
-
 deliveryInvestment+=delivery
-deliveryInvestmentText()
 
 }else{
 
@@ -550,10 +531,33 @@ shirtsSold+=qty
 salesTotal.innerText="₹"+totalSales
 profitTotal.innerText="₹"+totalProfit
 shirtSold.innerText=shirtsSold
+deliveryInvestment.innerText="₹"+deliveryInvestment
+
+/* MONTHLY DATA */
+
+let month=date.substring(0,7)
+
+if(!monthlySales[month]){
+monthlySales[month]=0
+monthlyProfit[month]=0
+}
+
+monthlySales[month]+=saleValue
+monthlyProfit[month]+=profit
+
+/* DAILY DATA */
+
+if(!dailySales[date]){
+dailySales[date]=0
+}
+
+dailySales[date]+=saleValue
+
+updateCharts()
 
 salesTable.innerHTML+=`
 <tr>
-<td>${saleDate.value}</td>
+<td>${date}</td>
 <td>${design}</td>
 <td>${price}</td>
 <td>${qty}</td>
@@ -564,8 +568,63 @@ salesTable.innerHTML+=`
 
 }
 
-function deliveryInvestmentText(){
-document.getElementById("deliveryInvestment").innerText="₹"+deliveryInvestment
+/* CHARTS */
+
+let salesChart
+let profitChart
+let dailyChart
+
+function updateCharts(){
+
+let months=Object.keys(monthlySales)
+let salesData=Object.values(monthlySales)
+let profitData=Object.values(monthlyProfit)
+
+let days=Object.keys(dailySales)
+let dailyData=Object.values(dailySales)
+
+if(salesChart){
+salesChart.destroy()
+profitChart.destroy()
+dailyChart.destroy()
+}
+
+/* SALES CHART */
+
+salesChart=new Chart(
+document.getElementById("salesChart"),
+{
+type:"line",
+data:{
+labels:months,
+datasets:[{label:"Sales",data:salesData,borderWidth:3}]
+}
+})
+
+/* PROFIT CHART */
+
+profitChart=new Chart(
+document.getElementById("profitChart"),
+{
+type:"line",
+data:{
+labels:months,
+datasets:[{label:"Profit",data:profitData,borderWidth:3}]
+}
+})
+
+/* DAILY CHART */
+
+dailyChart=new Chart(
+document.getElementById("dailyChart"),
+{
+type:"line",
+data:{
+labels:days,
+datasets:[{label:"Daily Sales",data:dailyData,borderWidth:3}]
+}
+})
+
 }
 
 </script>
