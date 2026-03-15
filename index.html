@@ -4,19 +4,20 @@
 <head>
 
 <meta name="viewport" content="width=device-width, initial-scale=1">
-
 <title>Nuno Wears Dashboard</title>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <style>
 
-*{box-sizing:border-box;}
+*{
+box-sizing:border-box;
+}
 
 body{
 margin:0;
-font-family:Arial;
-background:#0a0a0a;
+font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto;
+background:radial-gradient(circle,#1a1a1a,#000);
 color:white;
 overflow-x:hidden;
 }
@@ -25,34 +26,35 @@ overflow-x:hidden;
 
 .header{
 text-align:center;
-padding:15px;
+padding:20px;
 }
 
 /* LAYOUT */
 
 .container{
 display:flex;
-gap:15px;
+gap:20px;
 padding:15px;
 }
 
 /* SIDEBAR */
 
 .sidebar{
-width:180px;
-background:#111;
-padding:10px;
-border-radius:10px;
+width:200px;
+padding:15px;
+border-radius:20px;
+background:rgba(255,255,255,0.05);
+border:1px solid rgba(255,255,255,0.1);
 }
 
 .sidebar button{
 width:100%;
-margin:5px 0;
+margin:6px 0;
 padding:10px;
 border:none;
-background:#222;
+border-radius:10px;
+background:rgba(255,255,255,0.1);
 color:white;
-border-radius:6px;
 cursor:pointer;
 }
 
@@ -60,55 +62,63 @@ cursor:pointer;
 
 .main{
 flex:1;
+min-width:0;
 }
 
-/* DASHBOARD */
+/* CARDS */
 
 .cards{
 display:grid;
 grid-template-columns:repeat(5,1fr);
-gap:10px;
+gap:12px;
 }
 
 .card{
-background:#151515;
 padding:15px;
-border-radius:10px;
+border-radius:15px;
+background:rgba(255,255,255,0.06);
+border:1px solid rgba(255,255,255,0.1);
 text-align:center;
+}
+
+.card p{
+font-size:20px;
 }
 
 /* PANELS */
 
 .panel{
-margin-top:15px;
-background:#151515;
+margin-top:20px;
 padding:15px;
-border-radius:10px;
+border-radius:15px;
+background:rgba(255,255,255,0.05);
+border:1px solid rgba(255,255,255,0.1);
 }
 
-/* FORMS */
+/* FORM */
 
 .form-grid{
 display:grid;
-grid-template-columns:repeat(4,1fr);
+grid-template-columns:repeat(5,1fr);
 gap:8px;
+margin-top:10px;
 }
 
 input,select{
 padding:8px;
 border:none;
-background:#222;
-color:white;
 border-radius:6px;
+background:rgba(255,255,255,0.1);
+color:white;
 width:100%;
 }
 
 button.action{
-background:#444;
-color:white;
+padding:9px;
 border:none;
-padding:8px;
-border-radius:6px;
+border-radius:8px;
+background:rgba(255,255,255,0.25);
+color:white;
 cursor:pointer;
 }
 
@@ -116,18 +126,23 @@ cursor:pointer;
 
 .table-container{
 overflow-x:auto;
+width:100%;
 }
 
 table{
 width:100%;
 border-collapse:collapse;
-min-width:600px;
+margin-top:20px;
+min-width:650px;
 }
 
 th,td{
 padding:8px;
 text-align:center;
-border-bottom:1px solid #333;
+}
+
+tr{
+border-bottom:1px solid rgba(255,255,255,0.15);
 }
 
 /* SECTIONS */
@@ -150,12 +165,13 @@ flex-direction:column;
 
 .sidebar{
 display:flex;
-overflow-x:auto;
 width:100%;
+overflow:auto;
 }
 
 .sidebar button{
 flex:1;
+margin:3px;
 font-size:12px;
 }
 
@@ -181,8 +197,6 @@ grid-template-columns:1fr 1fr;
 
 <div class="container">
 
-<!-- SIDEBAR -->
-
 <div class="sidebar">
 
 <button onclick="showSection('dashboard')">Dashboard</button>
@@ -202,27 +216,27 @@ grid-template-columns:1fr 1fr;
 <div class="cards">
 
 <div class="card">
-<h4>Total Sales</h4>
+<h3>Total Sales</h3>
 <p id="salesTotal">₹0</p>
 </div>
 
 <div class="card">
-<h4>Total Investment</h4>
+<h3>Total Investment</h3>
 <p id="investmentTotal">₹0</p>
 </div>
 
 <div class="card">
-<h4>Total Profit</h4>
+<h3>Total Profit</h3>
 <p id="profitTotal">₹0</p>
 </div>
 
 <div class="card">
-<h4>T-Shirts Sold</h4>
+<h3>T-shirts Sold</h3>
 <p id="shirtSold">0</p>
 </div>
 
 <div class="card">
-<h4>Delivery Paid</h4>
+<h3>Delivery Paid</h3>
 <p id="deliveryInvestment">₹0</p>
 </div>
 
@@ -282,18 +296,14 @@ grid-template-columns:1fr 1fr;
 
 <div id="investment" class="section panel">
 
-<h3>Investment</h3>
+<h3>Monthly Investment</h3>
 
 <div class="form-grid">
 
 <input type="month" id="invMonth">
-
 <input type="number" id="purchaseCost" placeholder="Purchase">
-
 <input type="number" id="printingCost" placeholder="Printing">
-
 <input type="number" id="packingCost" placeholder="Packing">
-
 <input type="number" id="shirtCount" placeholder="Qty">
 
 <button class="action" onclick="addInvestment()">Add</button>
@@ -331,7 +341,6 @@ grid-template-columns:1fr 1fr;
 <div class="form-grid">
 
 <input type="text" id="designName" placeholder="Design Name">
-
 <input type="number" id="designCount" placeholder="Printed Qty">
 
 <button class="action" onclick="addInventory()">Add Design</button>
@@ -361,12 +370,12 @@ grid-template-columns:1fr 1fr;
 
 <div id="analytics" class="section panel">
 
-<h3>Monthly Sales Growth</h3>
+<h3>Sales Growth</h3>
 <canvas id="salesChart"></canvas>
 
 <br>
 
-<h3>Monthly Profit Growth</h3>
+<h3>Profit Growth</h3>
 <canvas id="profitChart"></canvas>
 
 <br>
@@ -382,14 +391,10 @@ grid-template-columns:1fr 1fr;
 
 <script>
 
-/* NAVIGATION */
-
 function showSection(id){
 document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"))
 document.getElementById(id).classList.add("active")
 }
-
-/* VARIABLES */
 
 let costPerShirt=0
 let totalSales=0
@@ -452,7 +457,6 @@ renderInventory()
 function updateDesignDropdown(){
 
 let select=document.getElementById("designSelect")
-
 select.innerHTML=""
 
 for(let d in inventory){
@@ -514,14 +518,10 @@ let saleValue=price*qty
 let profit
 
 if(paidBy==="company"){
-
 profit=(price-costPerShirt)*qty-delivery
 deliveryInvestment+=delivery
-
 }else{
-
 profit=(price-costPerShirt)*qty
-
 }
 
 totalSales+=saleValue
@@ -533,8 +533,6 @@ profitTotal.innerText="₹"+totalProfit
 shirtSold.innerText=shirtsSold
 deliveryInvestment.innerText="₹"+deliveryInvestment
 
-/* MONTHLY DATA */
-
 let month=date.substring(0,7)
 
 if(!monthlySales[month]){
@@ -544,8 +542,6 @@ monthlyProfit[month]=0
 
 monthlySales[month]+=saleValue
 monthlyProfit[month]+=profit
-
-/* DAILY DATA */
 
 if(!dailySales[date]){
 dailySales[date]=0
@@ -589,40 +585,25 @@ profitChart.destroy()
 dailyChart.destroy()
 }
 
-/* SALES CHART */
-
 salesChart=new Chart(
 document.getElementById("salesChart"),
 {
 type:"line",
-data:{
-labels:months,
-datasets:[{label:"Sales",data:salesData,borderWidth:3}]
-}
+data:{labels:months,datasets:[{label:"Sales",data:salesData,borderWidth:3}]}
 })
-
-/* PROFIT CHART */
 
 profitChart=new Chart(
 document.getElementById("profitChart"),
 {
 type:"line",
-data:{
-labels:months,
-datasets:[{label:"Profit",data:profitData,borderWidth:3}]
-}
+data:{labels:months,datasets:[{label:"Profit",data:profitData,borderWidth:3}]}
 })
-
-/* DAILY CHART */
 
 dailyChart=new Chart(
 document.getElementById("dailyChart"),
 {
 type:"line",
-data:{
-labels:days,
-datasets:[{label:"Daily Sales",data:dailyData,borderWidth:3}]
-}
+data:{labels:days,datasets:[{label:"Daily Sales",data:dailyData,borderWidth:3}]}
 })
 
 }
