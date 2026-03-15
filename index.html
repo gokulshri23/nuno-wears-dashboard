@@ -11,101 +11,105 @@
 
 <style>
 
+*{
+box-sizing:border-box;
+}
+
 body{
 margin:0;
 font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto;
 background:radial-gradient(circle,#1a1a1a,#000);
 color:white;
+overflow-x:hidden;
 }
 
-/* header */
+/* HEADER */
 
 .header{
 text-align:center;
-padding:20px;
+padding:15px;
 }
 
-.logo{
-width:180px;
-max-width:80%;
-}
-
-/* layout */
+/* LAYOUT */
 
 .container{
 display:flex;
-gap:20px;
+gap:15px;
 padding:15px;
+max-width:1200px;
+margin:auto;
 }
 
-/* sidebar */
+/* SIDEBAR */
 
 .sidebar{
-width:200px;
-padding:15px;
-border-radius:20px;
+width:180px;
+padding:12px;
+border-radius:15px;
 background:rgba(255,255,255,0.05);
-backdrop-filter:blur(20px);
 border:1px solid rgba(255,255,255,0.1);
 }
 
 .sidebar button{
 width:100%;
-margin:6px 0;
-padding:10px;
+margin:5px 0;
+padding:9px;
 border:none;
-border-radius:10px;
+border-radius:8px;
 background:rgba(255,255,255,0.1);
 color:white;
 cursor:pointer;
 }
 
-/* main */
+/* MAIN */
 
 .main{
 flex:1;
+min-width:0;
 }
 
-/* cards */
+/* DASHBOARD CARDS */
 
 .cards{
 display:grid;
 grid-template-columns:repeat(5,1fr);
-gap:12px;
+gap:10px;
 }
 
 .card{
-padding:15px;
-border-radius:15px;
+padding:14px;
+border-radius:12px;
 background:rgba(255,255,255,0.06);
 border:1px solid rgba(255,255,255,0.1);
 text-align:center;
 }
 
 .card p{
-font-size:20px;
+font-size:18px;
+margin:5px 0 0;
 }
 
-/* panels */
+/* PANELS */
 
 .panel{
-margin-top:20px;
+margin-top:15px;
 padding:15px;
-border-radius:15px;
+border-radius:12px;
 background:rgba(255,255,255,0.05);
 border:1px solid rgba(255,255,255,0.1);
 }
 
-/* inputs */
+/* FORM GRID */
 
 .form-grid{
 display:grid;
-grid-template-columns:repeat(5,1fr);
+grid-template-columns:repeat(4,1fr);
 gap:8px;
 margin-top:10px;
 }
 
 input,select{
+width:100%;
 padding:8px;
 border:none;
 border-radius:6px;
@@ -122,29 +126,31 @@ color:white;
 cursor:pointer;
 }
 
-/* tables */
+/* TABLE */
 
 .table-container{
+width:100%;
 overflow-x:auto;
 }
 
 table{
 width:100%;
 border-collapse:collapse;
-margin-top:20px;
-min-width:650px;
+margin-top:15px;
+min-width:600px;
 }
 
 th,td{
 padding:8px;
 text-align:center;
+font-size:13px;
 }
 
 tr{
 border-bottom:1px solid rgba(255,255,255,0.15);
 }
 
-/* sections */
+/* SECTIONS */
 
 .section{
 display:none;
@@ -154,24 +160,25 @@ display:none;
 display:block;
 }
 
-/* MOBILE */
+/* MOBILE FIX */
 
 @media(max-width:900px){
 
 .container{
 flex-direction:column;
+padding:10px;
 }
 
 .sidebar{
 display:flex;
 width:100%;
-overflow:auto;
+overflow-x:auto;
 }
 
 .sidebar button{
 flex:1;
-margin:3px;
 font-size:12px;
+margin:3px;
 }
 
 .cards{
@@ -180,6 +187,10 @@ grid-template-columns:1fr 1fr;
 
 .form-grid{
 grid-template-columns:1fr 1fr;
+}
+
+table{
+min-width:500px;
 }
 
 }
@@ -215,27 +226,27 @@ grid-template-columns:1fr 1fr;
 <div class="cards">
 
 <div class="card">
-<h3>Total Sales</h3>
+<h4>Total Sales</h4>
 <p id="salesTotal">₹0</p>
 </div>
 
 <div class="card">
-<h3>Total Investment</h3>
+<h4>Total Investment</h4>
 <p id="investmentTotal">₹0</p>
 </div>
 
 <div class="card">
-<h3>Total Profit</h3>
+<h4>Total Profit</h4>
 <p id="profitTotal">₹0</p>
 </div>
 
 <div class="card">
-<h3>T-shirts Sold</h3>
+<h4>T-Shirts Sold</h4>
 <p id="shirtSold">0</p>
 </div>
 
 <div class="card">
-<h3>Delivery Paid</h3>
+<h4>Delivery Paid</h4>
 <p id="deliveryInvestment">₹0</p>
 </div>
 
@@ -295,14 +306,18 @@ grid-template-columns:1fr 1fr;
 
 <div id="investment" class="section panel">
 
-<h3>Monthly Investment</h3>
+<h3>Investment</h3>
 
 <div class="form-grid">
 
 <input type="month" id="invMonth">
+
 <input type="number" id="purchaseCost" placeholder="Purchase">
+
 <input type="number" id="printingCost" placeholder="Printing">
+
 <input type="number" id="packingCost" placeholder="Packing">
+
 <input type="number" id="shirtCount" placeholder="Qty">
 
 <button class="action" onclick="addInvestment()">Add</button>
@@ -411,7 +426,6 @@ let inventory={}
 
 function addInvestment(){
 
-let month=invMonth.value
 let purchase=Number(purchaseCost.value)
 let printing=Number(printingCost.value)
 let packing=Number(packingCost.value)
@@ -427,7 +441,7 @@ investmentTotal.innerText="₹"+totalInvestment
 
 investmentTable.innerHTML+=`
 <tr>
-<td>${month}</td>
+<td>${invMonth.value}</td>
 <td>${purchase}</td>
 <td>${printing}</td>
 <td>${packing}</td>
@@ -498,17 +512,11 @@ inventoryTable.innerHTML=html
 
 function addSale(){
 
-let date=saleDate.value
 let design=designSelect.value
 let price=Number(salePrice.value)
 let qty=Number(saleQty.value)
 let delivery=Number(deliveryCharge.value)
 let paidBy=deliveryPaidBy.value
-
-if(!inventory[design]){
-alert("Design not found")
-return
-}
 
 if(inventory[design].printed-inventory[design].sold<qty){
 alert("Not enough stock")
@@ -543,21 +551,9 @@ salesTotal.innerText="₹"+totalSales
 profitTotal.innerText="₹"+totalProfit
 shirtSold.innerText=shirtsSold
 
-let month=date.substring(0,7)
-
-if(!monthlySales[month]){
-monthlySales[month]=0
-monthlyProfit[month]=0
-}
-
-monthlySales[month]+=saleValue
-monthlyProfit[month]+=profit
-
-updateCharts()
-
 salesTable.innerHTML+=`
 <tr>
-<td>${date}</td>
+<td>${saleDate.value}</td>
 <td>${design}</td>
 <td>${price}</td>
 <td>${qty}</td>
@@ -570,45 +566,6 @@ salesTable.innerHTML+=`
 
 function deliveryInvestmentText(){
 document.getElementById("deliveryInvestment").innerText="₹"+deliveryInvestment
-}
-
-/* charts */
-
-let salesChart
-let profitChart
-
-function updateCharts(){
-
-let months=Object.keys(monthlySales)
-
-let salesData=Object.values(monthlySales)
-let profitData=Object.values(monthlyProfit)
-
-if(salesChart){
-salesChart.destroy()
-profitChart.destroy()
-}
-
-salesChart=new Chart(
-salesChartCanvas=document.getElementById("salesChart"),
-{
-type:"line",
-data:{
-labels:months,
-datasets:[{label:"Sales",data:salesData,borderWidth:3}]
-}
-})
-
-profitChart=new Chart(
-profitChartCanvas=document.getElementById("profitChart"),
-{
-type:"line",
-data:{
-labels:months,
-datasets:[{label:"Profit",data:profitData,borderWidth:3}]
-}
-})
-
 }
 
 </script>
