@@ -3,6 +3,8 @@
 
 <head>
 
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
 <title>Nuno Wears Dashboard</title>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -16,24 +18,31 @@ background:radial-gradient(circle,#1a1a1a,#000);
 color:white;
 }
 
+/* HEADER */
+
 .header{
 text-align:center;
-padding:25px;
+padding:20px;
 }
 
 .logo{
-width:300px;
+width:220px;
+max-width:90%;
 }
+
+/* LAYOUT */
 
 .container{
 display:flex;
-gap:25px;
-padding:25px;
+gap:20px;
+padding:20px;
 }
 
+/* SIDEBAR */
+
 .sidebar{
-width:220px;
-padding:20px;
+width:200px;
+padding:15px;
 border-radius:20px;
 background:rgba(255,255,255,0.05);
 backdrop-filter:blur(25px);
@@ -42,7 +51,7 @@ border:1px solid rgba(255,255,255,0.1);
 
 .sidebar button{
 width:100%;
-margin:10px 0;
+margin:8px 0;
 padding:10px;
 border:none;
 border-radius:10px;
@@ -51,23 +60,23 @@ color:white;
 cursor:pointer;
 }
 
-.sidebar button:hover{
-background:rgba(255,255,255,0.25);
-}
+/* MAIN */
 
 .main{
 flex:1;
 }
 
+/* DASHBOARD CARDS */
+
 .cards{
-display:flex;
-gap:20px;
+display:grid;
+grid-template-columns:repeat(5,1fr);
+gap:15px;
 }
 
 .card{
-flex:1;
-padding:20px;
-border-radius:20px;
+padding:18px;
+border-radius:18px;
 background:rgba(255,255,255,0.06);
 backdrop-filter:blur(20px);
 border:1px solid rgba(255,255,255,0.1);
@@ -75,17 +84,21 @@ text-align:center;
 }
 
 .card p{
-font-size:26px;
+font-size:22px;
 }
+
+/* PANELS */
 
 .panel{
 margin-top:20px;
 padding:20px;
-border-radius:20px;
+border-radius:18px;
 background:rgba(255,255,255,0.05);
 backdrop-filter:blur(25px);
 border:1px solid rgba(255,255,255,0.1);
 }
+
+/* INPUTS */
 
 input,select{
 padding:8px;
@@ -106,6 +119,8 @@ color:white;
 cursor:pointer;
 }
 
+/* TABLE */
+
 table{
 width:100%;
 margin-top:20px;
@@ -121,12 +136,40 @@ tr{
 border-bottom:1px solid rgba(255,255,255,0.15);
 }
 
+/* SECTIONS */
+
 .section{
 display:none;
 }
 
 .active{
 display:block;
+}
+
+/* MOBILE RESPONSIVE */
+
+@media(max-width:900px){
+
+.container{
+flex-direction:column;
+}
+
+.sidebar{
+display:flex;
+width:100%;
+justify-content:space-around;
+}
+
+.sidebar button{
+width:auto;
+flex:1;
+margin:5px;
+}
+
+.cards{
+grid-template-columns:1fr 1fr;
+}
+
 }
 
 </style>
@@ -174,7 +217,12 @@ display:block;
 </div>
 
 <div class="card">
-<h3>Delivery Paid by Company</h3>
+<h3>T-shirts Sold</h3>
+<p id="shirtSold">0</p>
+</div>
+
+<div class="card">
+<h3>Delivery Paid</h3>
 <p id="deliveryInvestment">₹0</p>
 </div>
 
@@ -192,6 +240,8 @@ display:block;
 
 <input type="number" id="salePrice" placeholder="Selling Price">
 
+<input type="number" id="saleQty" placeholder="T-shirt Count">
+
 <input type="number" id="deliveryCharge" placeholder="Delivery Charge">
 
 <select id="deliveryPaidBy">
@@ -206,6 +256,7 @@ display:block;
 <tr>
 <th>Date</th>
 <th>Price</th>
+<th>Qty</th>
 <th>Delivery</th>
 <th>Paid By</th>
 <th>Profit</th>
@@ -225,13 +276,13 @@ display:block;
 
 <input type="month" id="invMonth">
 
-<input type="number" id="purchaseCost" placeholder="Total T-shirt Purchase Cost">
+<input type="number" id="purchaseCost" placeholder="Purchase Cost">
 
 <input type="number" id="printingCost" placeholder="Printing Cost">
 
 <input type="number" id="packingCost" placeholder="Packing Cost">
 
-<input type="number" id="shirtCount" placeholder="Number of T-shirts Bought">
+<input type="number" id="shirtCount" placeholder="T-shirt Bought">
 
 <br>
 
@@ -245,8 +296,8 @@ display:block;
 <th>Printing</th>
 <th>Packing</th>
 <th>Qty</th>
-<th>Cost per Shirt</th>
-<th>Total Investment</th>
+<th>Cost/Shirt</th>
+<th>Total</th>
 </tr>
 
 <tbody id="investmentTable"></tbody>
@@ -290,9 +341,12 @@ let totalSales=0
 let totalInvestment=0
 let totalProfit=0
 let deliveryInvestment=0
+let shirtsSold=0
 
 let monthlySales={}
 let monthlyProfit={}
+
+/* INVESTMENT */
 
 function addInvestment(){
 
@@ -331,38 +385,44 @@ document.getElementById("investmentTable").innerHTML+=row
 
 }
 
+/* SALES */
+
 function addSale(){
 
 let date=document.getElementById("saleDate").value
 let price=Number(document.getElementById("salePrice").value)
+let qty=Number(document.getElementById("saleQty").value)
 let delivery=Number(document.getElementById("deliveryCharge").value)
 let paidBy=document.getElementById("deliveryPaidBy").value
 
-if(!date || !price){
+if(!date || !price || !qty){
 alert("Enter required fields")
 return
 }
 
+let saleValue=price*qty
 let profit
 
 if(paidBy==="company"){
 
-profit = price - costPerShirt - delivery
+profit = (price - costPerShirt)*qty - delivery
 
 deliveryInvestment += delivery
 document.getElementById("deliveryInvestment").innerText="₹"+deliveryInvestment
 
 }else{
 
-profit = price - costPerShirt
+profit = (price - costPerShirt)*qty
 
 }
 
-totalSales += price
+totalSales += saleValue
 totalProfit += profit
+shirtsSold += qty
 
 document.getElementById("salesTotal").innerText="₹"+totalSales
 document.getElementById("profitTotal").innerText="₹"+totalProfit
+document.getElementById("shirtSold").innerText=shirtsSold
 
 let month=date.substring(0,7)
 
@@ -371,7 +431,7 @@ monthlySales[month]=0
 monthlyProfit[month]=0
 }
 
-monthlySales[month]+=price
+monthlySales[month]+=saleValue
 monthlyProfit[month]+=profit
 
 updateCharts()
@@ -380,6 +440,7 @@ let row=`
 <tr>
 <td>${date}</td>
 <td>₹${price}</td>
+<td>${qty}</td>
 <td>₹${delivery}</td>
 <td>${paidBy}</td>
 <td>₹${profit.toFixed(2)}</td>
@@ -389,6 +450,8 @@ let row=`
 document.getElementById("salesTable").innerHTML+=row
 
 }
+
+/* CHARTS */
 
 let salesChart
 let profitChart
@@ -411,14 +474,12 @@ document.getElementById("salesChart"),
 type:"line",
 data:{
 labels:months,
-datasets:[
-{
+datasets:[{
 label:"Monthly Sales",
 data:salesData,
 borderWidth:3,
 tension:0.4
-}
-]
+}]
 }
 }
 )
@@ -429,14 +490,12 @@ document.getElementById("profitChart"),
 type:"line",
 data:{
 labels:months,
-datasets:[
-{
+datasets:[{
 label:"Monthly Profit",
 data:profitData,
 borderWidth:3,
 tension:0.4
-}
-]
+}]
 }
 }
 )
