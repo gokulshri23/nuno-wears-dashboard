@@ -38,22 +38,18 @@ padding:25px;
 /* SIDEBAR */
 
 .sidebar{
-
 width:220px;
 padding:25px;
 border-radius:20px;
 
 background:rgba(255,255,255,0.05);
 backdrop-filter:blur(20px);
-
 border:1px solid rgba(255,255,255,0.1);
 }
 
 .sidebar button{
-
 display:block;
 width:100%;
-
 margin:10px 0;
 padding:10px;
 
@@ -84,7 +80,6 @@ gap:20px;
 }
 
 .card{
-
 flex:1;
 padding:20px;
 border-radius:20px;
@@ -104,7 +99,6 @@ font-size:28px;
 /* PANELS */
 
 .panel{
-
 margin-top:20px;
 padding:20px;
 
@@ -119,7 +113,6 @@ border:1px solid rgba(255,255,255,0.1);
 /* INPUT */
 
 input{
-
 padding:8px;
 margin:5px;
 
@@ -131,7 +124,6 @@ color:white;
 }
 
 button.action{
-
 padding:8px 15px;
 margin-top:8px;
 
@@ -167,9 +159,9 @@ display:block;
 <div class="sidebar">
 
 <button onclick="showSection('dashboard')">Dashboard</button>
-<button onclick="showSection('sales')">Sales</button>
-<button onclick="showSection('investment')">Investments</button>
-<button onclick="showSection('analytics')">Analytics</button>
+<button onclick="showSection('salesSection')">Sales</button>
+<button onclick="showSection('investmentSection')">Investments</button>
+<button onclick="showSection('analyticsSection')">Analytics</button>
 
 </div>
 
@@ -183,17 +175,17 @@ display:block;
 
 <div class="card">
 <h3>Total Sales</h3>
-<p id="sales">0</p>
+<p id="salesTotal">0</p>
 </div>
 
 <div class="card">
 <h3>Total Investment</h3>
-<p id="investment">0</p>
+<p id="investmentTotal">0</p>
 </div>
 
 <div class="card">
 <h3>Profit</h3>
-<p id="profit">0</p>
+<p id="profitTotal">0</p>
 </div>
 
 </div>
@@ -202,7 +194,7 @@ display:block;
 
 <!-- SALES -->
 
-<div id="sales" class="section panel">
+<div id="salesSection" class="section panel">
 
 <h3>Add Sale</h3>
 
@@ -214,7 +206,7 @@ display:block;
 
 <!-- INVESTMENT -->
 
-<div id="investment" class="section panel">
+<div id="investmentSection" class="section panel">
 
 <h3>Add Investment</h3>
 
@@ -229,7 +221,7 @@ display:block;
 
 <!-- ANALYTICS -->
 
-<div id="analytics" class="section panel">
+<div id="analyticsSection" class="section panel">
 
 <h3>Monthly Growth</h3>
 
@@ -243,19 +235,15 @@ display:block;
 
 <script>
 
-/* SWITCH SECTIONS */
-
 function showSection(id){
 
-document.querySelectorAll(".section").forEach(s=>{
-s.classList.remove("active")
+document.querySelectorAll(".section").forEach(section=>{
+section.classList.remove("active")
 })
 
 document.getElementById(id).classList.add("active")
 
 }
-
-/* DATA */
 
 let totalSales=0
 let totalInvestment=0
@@ -285,16 +273,14 @@ update()
 
 function update(){
 
-document.getElementById("sales").innerText="₹"+totalSales
-document.getElementById("investment").innerText="₹"+totalInvestment
+document.getElementById("salesTotal").innerText="₹"+totalSales
+document.getElementById("investmentTotal").innerText="₹"+totalInvestment
 
 let profit=totalSales-totalInvestment
 
-document.getElementById("profit").innerText="₹"+profit
+document.getElementById("profitTotal").innerText="₹"+profit
 
 }
-
-/* CHART */
 
 const ctx=document.getElementById('growthChart')
 
