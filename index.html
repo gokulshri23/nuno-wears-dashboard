@@ -96,10 +96,6 @@ background:rgba(255,255,255,0.1);
 color:white;
 }
 
-input::-webkit-inner-spin-button{
--webkit-appearance:none;
-}
-
 button.action{
 padding:8px 15px;
 margin-top:10px;
@@ -199,10 +195,8 @@ display:block;
 <input type="number" id="deliveryCharge" placeholder="Delivery Charge">
 
 <select id="deliveryPaidBy">
-
-<option value="customer">Delivery Paid by Customer</option>
-<option value="company">Delivery Paid by Company</option>
-
+<option value="customer">Customer Pays Delivery</option>
+<option value="company">Company Pays Delivery</option>
 </select>
 
 <button class="action" onclick="addSale()">Add Sale</button>
@@ -349,15 +343,23 @@ alert("Enter required fields")
 return
 }
 
-let profit=price-costPerShirt
+let profit
 
 if(paidBy==="company"){
-deliveryInvestment+=delivery
+
+profit = price - costPerShirt - delivery
+
+deliveryInvestment += delivery
 document.getElementById("deliveryInvestment").innerText="₹"+deliveryInvestment
+
+}else{
+
+profit = price - costPerShirt
+
 }
 
-totalSales+=price
-totalProfit+=profit
+totalSales += price
+totalProfit += profit
 
 document.getElementById("salesTotal").innerText="₹"+totalSales
 document.getElementById("profitTotal").innerText="₹"+totalProfit
