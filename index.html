@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
 
 <title>Nuno Wears Dashboard</title>
@@ -41,7 +42,6 @@ padding:25px;
 width:220px;
 padding:25px;
 border-radius:20px;
-
 background:rgba(255,255,255,0.05);
 backdrop-filter:blur(20px);
 border:1px solid rgba(255,255,255,0.1);
@@ -52,13 +52,10 @@ display:block;
 width:100%;
 margin:10px 0;
 padding:10px;
-
 border:none;
 border-radius:10px;
-
 background:rgba(255,255,255,0.1);
 color:white;
-
 cursor:pointer;
 }
 
@@ -83,12 +80,9 @@ gap:20px;
 flex:1;
 padding:20px;
 border-radius:20px;
-
 background:rgba(255,255,255,0.06);
 backdrop-filter:blur(20px);
-
 border:1px solid rgba(255,255,255,0.1);
-
 text-align:center;
 }
 
@@ -101,40 +95,46 @@ font-size:28px;
 .panel{
 margin-top:20px;
 padding:20px;
-
 border-radius:20px;
-
 background:rgba(255,255,255,0.05);
 backdrop-filter:blur(20px);
-
 border:1px solid rgba(255,255,255,0.1);
 }
 
-/* INPUT */
+/* INPUTS */
 
 input{
 padding:8px;
 margin:5px;
-
 border:none;
 border-radius:6px;
-
 background:rgba(255,255,255,0.1);
 color:white;
+}
+
+/* REMOVE NUMBER ARROWS */
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+-webkit-appearance: none;
+margin: 0;
+}
+
+input[type=number] {
+-moz-appearance: textfield;
 }
 
 button.action{
 padding:8px 15px;
 margin-top:8px;
-
 border:none;
 border-radius:8px;
-
 background:rgba(255,255,255,0.2);
 color:white;
-
 cursor:pointer;
 }
+
+/* SECTIONS */
 
 .section{
 display:none;
@@ -142,6 +142,23 @@ display:none;
 
 .active{
 display:block;
+}
+
+/* TABLE */
+
+table{
+width:100%;
+margin-top:20px;
+border-collapse:collapse;
+}
+
+th,td{
+padding:10px;
+text-align:center;
+}
+
+tr{
+border-bottom:1px solid rgba(255,255,255,0.15);
 }
 
 </style>
@@ -198,9 +215,25 @@ display:block;
 
 <h3>Add Sale</h3>
 
-<input type="number" id="saleAmount" placeholder="Sale Amount">
+<input type="date" id="saleDate">
+
+<input type="number" id="saleRate" placeholder="Total Selling Price">
+
+<input type="number" id="saleProfit" placeholder="Profit">
 
 <button class="action" onclick="addSale()">Add Sale</button>
+
+<table>
+
+<tr>
+<th>Date</th>
+<th>Total Rate</th>
+<th>Profit</th>
+</tr>
+
+<tbody id="salesTable"></tbody>
+
+</table>
 
 </div>
 
@@ -235,6 +268,8 @@ display:block;
 
 <script>
 
+/* NAVIGATION */
+
 function showSection(id){
 
 document.querySelectorAll(".section").forEach(section=>{
@@ -245,16 +280,37 @@ document.getElementById(id).classList.add("active")
 
 }
 
+/* DATA */
+
 let totalSales=0
 let totalInvestment=0
 
 function addSale(){
 
-let sale=Number(document.getElementById("saleAmount").value)
+let date=document.getElementById("saleDate").value
+let rate=Number(document.getElementById("saleRate").value)
+let profit=Number(document.getElementById("saleProfit").value)
 
-totalSales+=sale
+if(!date || !rate){
+alert("Enter date and price")
+return
+}
 
-update()
+totalSales+=rate
+
+let table=document.getElementById("salesTable")
+
+let row=`
+<tr>
+<td>${date}</td>
+<td>₹${rate}</td>
+<td>₹${profit}</td>
+</tr>
+`
+
+table.innerHTML+=row
+
+updateTotals()
 
 }
 
@@ -267,11 +323,11 @@ let other=Number(document.getElementById("other").value)
 
 totalInvestment+=printing+product+packaging+other
 
-update()
+updateTotals()
 
 }
 
-function update(){
+function updateTotals(){
 
 document.getElementById("salesTotal").innerText="₹"+totalSales
 document.getElementById("investmentTotal").innerText="₹"+totalInvestment
@@ -281,6 +337,8 @@ let profit=totalSales-totalInvestment
 document.getElementById("profitTotal").innerText="₹"+profit
 
 }
+
+/* CHART */
 
 const ctx=document.getElementById('growthChart')
 
@@ -300,4 +358,5 @@ tension:0.4
 </script>
 
 </body>
+
 </html>
