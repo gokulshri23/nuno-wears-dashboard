@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html>
-
 <head>
+
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Nuno Wears Dashboard</title>
+<title>Nuno Wears Pro Dashboard</title>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
@@ -13,11 +13,12 @@
 
 body{
 margin:0;
-font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto;
-background:radial-gradient(circle,#1a1a1a,#000);
+font-family:-apple-system,BlinkMacSystemFont,"Segoe UI";
+background:linear-gradient(135deg,#0f0f0f,#000);
 color:white;
-overflow-x:hidden;
 }
+
+/* header */
 
 .header{
 text-align:center;
@@ -25,7 +26,7 @@ padding:20px;
 }
 
 .logo{
-width:150px;
+width:140px;
 display:block;
 margin:auto;
 }
@@ -34,20 +35,20 @@ margin:auto;
 
 .container{
 display:flex;
-gap:20px;
+gap:15px;
 padding:15px;
 }
 
 .sidebar{
 width:200px;
-padding:15px;
-border-radius:20px;
 background:rgba(255,255,255,0.05);
+border-radius:15px;
+padding:10px;
 }
 
 .sidebar button{
 width:100%;
-margin:6px 0;
+margin:5px 0;
 padding:10px;
 border:none;
 border-radius:10px;
@@ -61,35 +62,34 @@ flex:1;
 min-width:0;
 }
 
+/* cards */
+
 .cards{
 display:grid;
 grid-template-columns:repeat(5,1fr);
-gap:12px;
+gap:10px;
 }
 
 .card{
-padding:15px;
-border-radius:15px;
-background:rgba(255,255,255,0.06);
+padding:12px;
+border-radius:12px;
+background:rgba(255,255,255,0.07);
 text-align:center;
 }
 
 /* panel */
 
 .panel{
-margin-top:20px;
+margin-top:15px;
 padding:15px;
 border-radius:15px;
 background:rgba(255,255,255,0.05);
 }
 
-/* form */
-
 .form-grid{
 display:grid;
-grid-template-columns:repeat(5,1fr);
+grid-template-columns:repeat(6,1fr);
 gap:8px;
-margin-top:10px;
 }
 
 input,select{
@@ -102,7 +102,7 @@ width:100%;
 }
 
 button.action{
-padding:9px;
+padding:8px;
 border:none;
 border-radius:8px;
 background:rgba(255,255,255,0.25);
@@ -119,8 +119,7 @@ overflow-x:auto;
 table{
 width:100%;
 border-collapse:collapse;
-margin-top:20px;
-min-width:650px;
+min-width:700px;
 }
 
 th,td{
@@ -132,7 +131,14 @@ tr{
 border-bottom:1px solid rgba(255,255,255,0.15);
 }
 
-/* sections */
+/* low stock */
+
+.low{
+color:red;
+font-weight:bold;
+}
+
+/* section */
 
 .section{display:none;}
 .active{display:block;}
@@ -167,17 +173,17 @@ margin:3px;
 
 <div class="header">
 <img src="logo.png" class="logo">
-<h2>Nuno Wears Dashboard</h2>
+<h2>Nuno Wears</h2>
 </div>
 
 <div class="container">
 
 <div class="sidebar">
-<button onclick="showSection('dashboard')">Dashboard</button>
-<button onclick="showSection('sales')">Sales</button>
-<button onclick="showSection('investment')">Investment</button>
-<button onclick="showSection('inventory')">Inventory</button>
-<button onclick="showSection('analytics')">Analytics</button>
+<button onclick="show('dashboard')">Dashboard</button>
+<button onclick="show('sales')">Sales</button>
+<button onclick="show('investment')">Investment</button>
+<button onclick="show('inventory')">Inventory</button>
+<button onclick="show('analytics')">Analytics</button>
 </div>
 
 <div class="main">
@@ -185,56 +191,51 @@ margin:3px;
 <!-- DASHBOARD -->
 
 <div id="dashboard" class="section active">
-
 <div class="cards">
 
-<div class="card"><h3>Total Sales</h3><p id="salesTotal">₹0</p></div>
-<div class="card"><h3>Total Investment</h3><p id="investmentTotal">₹0</p></div>
-<div class="card"><h3>Total Profit</h3><p id="profitTotal">₹0</p></div>
-<div class="card"><h3>T-Shirts Sold</h3><p id="shirtSold">0</p></div>
-<div class="card"><h3>Delivery Paid</h3><p id="deliveryInvestment">₹0</p></div>
+<div class="card">Sales<br><span id="salesTotal">₹0</span></div>
+<div class="card">Investment<br><span id="investmentTotal">₹0</span></div>
+<div class="card">Profit<br><span id="profitTotal">₹0</span></div>
+<div class="card">Sold<br><span id="shirtSold">0</span></div>
+<div class="card">Delivery<br><span id="deliveryTotal">₹0</span></div>
 
 </div>
-
 </div>
 
 <!-- SALES -->
 
 <div id="sales" class="section panel">
 
-<h3>Add Sale</h3>
-
 <div class="form-grid">
 
-<input type="date" id="saleDate">
-<select id="designSelect"></select>
-<input type="number" id="salePrice" placeholder="Price">
-<input type="number" id="saleQty" placeholder="Qty">
-<input type="number" id="deliveryCharge" placeholder="Delivery">
+<input type="date" id="date">
+<select id="design"></select>
+<input type="number" id="price" placeholder="Price">
+<input type="number" id="qty" placeholder="Qty">
+<input type="number" id="delivery" placeholder="Delivery">
 
-<select id="deliveryPaidBy">
+<select id="paid">
 <option value="customer">Customer</option>
 <option value="company">Company</option>
 </select>
 
-<button class="action" onclick="addSale()">Add Sale</button>
+<button class="action" onclick="addSale()">Add</button>
 
 </div>
 
 <div class="table-container">
 <table>
+<thead>
 <tr>
-<th>Date</th>
-<th>Design</th>
-<th>Price</th>
-<th>Qty</th>
-<th>Delivery</th>
-<th>Profit</th>
-<th>Delete</th>
+<th>Date</th><th>Design</th><th>Price</th><th>Qty</th>
+<th>Delivery</th><th>Profit</th><th>Delete</th>
 </tr>
+</thead>
 <tbody id="salesTable"></tbody>
 </table>
 </div>
+
+<button onclick="undoDelete('sales')">Undo Delete</button>
 
 </div>
 
@@ -242,35 +243,23 @@ margin:3px;
 
 <div id="investment" class="section panel">
 
-<h3>Investment</h3>
-
 <div class="form-grid">
 
-<input type="month" id="invMonth">
-<input type="number" id="purchaseCost" placeholder="Purchase">
-<input type="number" id="printingCost" placeholder="Printing">
-<input type="number" id="packingCost" placeholder="Packing">
-<input type="number" id="shirtCount" placeholder="Qty">
+<input type="month" id="month">
+<input type="number" id="purchase" placeholder="Purchase">
+<input type="number" id="printing" placeholder="Printing">
+<input type="number" id="packing" placeholder="Packing">
+<input type="number" id="count" placeholder="Qty">
 
-<button class="action" onclick="addInvestment()">Add</button>
+<button onclick="addInvestment()">Add</button>
 
 </div>
 
-<div class="table-container">
 <table>
-<tr>
-<th>Month</th>
-<th>Purchase</th>
-<th>Printing</th>
-<th>Packing</th>
-<th>Qty</th>
-<th>Cost/Shirt</th>
-<th>Total</th>
-<th>Delete</th>
-</tr>
 <tbody id="investmentTable"></tbody>
 </table>
-</div>
+
+<button onclick="undoDelete('investment')">Undo Delete</button>
 
 </div>
 
@@ -278,29 +267,20 @@ margin:3px;
 
 <div id="inventory" class="section panel">
 
-<h3>Inventory</h3>
-
 <div class="form-grid">
 
-<input type="text" id="designName" placeholder="Design Name">
-<input type="number" id="designCount" placeholder="Printed Qty">
+<input id="dname" placeholder="Design">
+<input id="dqty" type="number" placeholder="Qty">
 
-<button class="action" onclick="addInventory()">Add Design</button>
+<button onclick="addInventory()">Add</button>
 
 </div>
 
-<div class="table-container">
 <table>
-<tr>
-<th>Design</th>
-<th>Printed</th>
-<th>Sold</th>
-<th>Remaining</th>
-<th>Delete</th>
-</tr>
 <tbody id="inventoryTable"></tbody>
 </table>
-</div>
+
+<button onclick="undoDelete('inventory')">Undo Delete</button>
 
 </div>
 
@@ -308,13 +288,7 @@ margin:3px;
 
 <div id="analytics" class="section panel">
 
-<h3>Monthly Sales</h3>
 <canvas id="salesChart"></canvas>
-
-<h3>Monthly Profit</h3>
-<canvas id="profitChart"></canvas>
-
-<h3>Daily Sales</h3>
 <canvas id="dailyChart"></canvas>
 
 </div>
@@ -326,7 +300,7 @@ margin:3px;
 
 /* navigation */
 
-function showSection(id){
+function show(id){
 document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"))
 document.getElementById(id).classList.add("active")
 }
@@ -337,269 +311,204 @@ let salesData=[]
 let investmentData=[]
 let inventoryData=[]
 
-let totalSales=0
-let totalProfit=0
-let totalInvestment=0
-let deliveryInvestment=0
-let shirtsSold=0
-
-let costPerShirt=0
-
-let monthlySales={}
-let monthlyProfit={}
-let dailySales={}
-
-/* dashboard */
-
-function updateDashboard(){
-salesTotal.innerText="₹"+totalSales
-profitTotal.innerText="₹"+totalProfit
-investmentTotal.innerText="₹"+totalInvestment
-shirtSold.innerText=shirtsSold
-deliveryInvestment.innerText="₹"+deliveryInvestment
-}
+let deletedStack={sales:[],investment:[],inventory:[]}
 
 /* inventory */
 
 function addInventory(){
-
-inventoryData.push({
-name:designName.value,
-printed:Number(designCount.value),
-sold:0
-})
-
+inventoryData.push({name:dname.value,printed:+dqty.value,sold:0})
 renderInventory()
-updateDesignDropdown()
+updateDesign()
 }
 
 function renderInventory(){
 
-let html=""
+inventoryTable.innerHTML=""
 
-inventoryData.forEach((i,index)=>{
+inventoryData.forEach((i,ind)=>{
 
-let remaining=i.printed-i.sold
+let rem=i.printed-i.sold
+let lowClass = rem<=5 ? "low" : ""
 
-html+=`
-<tr>
+inventoryTable.innerHTML+=`
+<tr class="${lowClass}">
 <td>${i.name}</td>
 <td>${i.printed}</td>
 <td>${i.sold}</td>
-<td>${remaining}</td>
-<td><button onclick="deleteInventory(${index})">❌</button></td>
+<td>${rem}</td>
+<td><button onclick="del('inventory',${ind})">❌</button></td>
 </tr>
 `
-
 })
 
-inventoryTable.innerHTML=html
 }
 
-function deleteInventory(index){
-inventoryData.splice(index,1)
-renderInventory()
-updateDesignDropdown()
-}
-
-function updateDesignDropdown(){
-
-designSelect.innerHTML=""
-
+function updateDesign(){
+design.innerHTML=""
 inventoryData.forEach(i=>{
 let op=document.createElement("option")
 op.value=i.name
 op.textContent=i.name
-designSelect.appendChild(op)
+design.appendChild(op)
 })
-
 }
 
 /* sales */
 
 function addSale(){
 
-let date=saleDate.value
-let design=designSelect.value
-let price=Number(salePrice.value)
-let qty=Number(saleQty.value)
-let delivery=Number(deliveryCharge.value)
-let paidBy=deliveryPaidBy.value
+let item=inventoryData.find(i=>i.name===design.value)
 
-let item=inventoryData.find(i=>i.name===design)
+if(item.printed-item.sold<qty.value){alert("No stock");return;}
 
-if(item.printed-item.sold<qty){
-alert("Not enough stock")
-return
-}
+item.sold+=+qty.value
 
-item.sold+=qty
+let profit=(price.value)*qty.value
 
-let saleValue=price*qty
-let profit=(price-costPerShirt)*qty
+if(paid.value==="company") profit-=+delivery.value
 
-if(paidBy==="company"){
-profit-=delivery
-deliveryInvestment+=delivery
-}
-
-totalSales+=saleValue
-totalProfit+=profit
-shirtsSold+=qty
-
-salesData.push({date,design,price,qty,delivery,profit})
-
-if(!monthlySales[date.substring(0,7)]) monthlySales[date.substring(0,7)]=0
-monthlySales[date.substring(0,7)]+=saleValue
-
-if(!monthlyProfit[date.substring(0,7)]) monthlyProfit[date.substring(0,7)]=0
-monthlyProfit[date.substring(0,7)]+=profit
-
-if(!dailySales[date]) dailySales[date]=0
-dailySales[date]+=saleValue
+salesData.push({
+date:date.value,
+design:design.value,
+price:+price.value,
+qty:+qty.value,
+delivery:+delivery.value,
+paid:paid.value,
+profit
+})
 
 renderSales()
 renderInventory()
 updateDashboard()
-updateCharts()
+updateChart()
 
 }
 
-/* render sales */
-
 function renderSales(){
 
-let html=""
+salesTable.innerHTML=""
 
-salesData.forEach((s,index)=>{
+salesData.forEach((s,i)=>{
 
-html+=`
+salesTable.innerHTML+=`
 <tr>
 <td>${s.date}</td>
 <td>${s.design}</td>
 <td>${s.price}</td>
 <td>${s.qty}</td>
 <td>${s.delivery}</td>
-<td>${s.profit.toFixed(2)}</td>
-<td><button onclick="deleteSale(${index})">❌</button></td>
+<td>${s.profit}</td>
+<td><button onclick="del('sales',${i})">❌</button></td>
 </tr>
 `
 
 })
 
-salesTable.innerHTML=html
-}
-
-/* delete sale */
-
-function deleteSale(index){
-
-let s=salesData[index]
-
-totalSales-=s.price*s.qty
-totalProfit-=s.profit
-shirtsSold-=s.qty
-
-let item=inventoryData.find(i=>i.name===s.design)
-if(item) item.sold-=s.qty
-
-salesData.splice(index,1)
-
-renderSales()
-renderInventory()
-updateDashboard()
 }
 
 /* investment */
 
 function addInvestment(){
 
-let purchase=Number(purchaseCost.value)
-let printing=Number(printingCost.value)
-let packing=Number(packingCost.value)
-let qty=Number(shirtCount.value)
-
-let total=purchase+printing+packing
-
-costPerShirt=total/qty
-totalInvestment+=total
+let total=+purchase.value + +printing.value + +packing.value
 
 investmentData.push({
-month:invMonth.value,
-purchase,printing,packing,qty,total
+month:month.value,
+total
 })
 
 renderInvestment()
 updateDashboard()
+
 }
 
 function renderInvestment(){
 
-let html=""
+investmentTable.innerHTML=""
 
-investmentData.forEach((i,index)=>{
+investmentData.forEach((i,ind)=>{
 
-let cost=i.total/i.qty
-
-html+=`
+investmentTable.innerHTML+=`
 <tr>
 <td>${i.month}</td>
-<td>${i.purchase}</td>
-<td>${i.printing}</td>
-<td>${i.packing}</td>
-<td>${i.qty}</td>
-<td>${cost.toFixed(2)}</td>
 <td>${i.total}</td>
-<td><button onclick="deleteInvestment(${index})">❌</button></td>
+<td><button onclick="del('investment',${ind})">❌</button></td>
 </tr>
 `
 
 })
 
-investmentTable.innerHTML=html
 }
 
-function deleteInvestment(index){
+/* delete + undo */
 
-totalInvestment-=investmentData[index].total
-investmentData.splice(index,1)
+function del(type,index){
 
+deletedStack[type].push(eval(type+"Data")[index])
+eval(type+"Data").splice(index,1)
+
+renderAll()
+}
+
+function undoDelete(type){
+
+if(deletedStack[type].length===0) return
+
+eval(type+"Data").push(deletedStack[type].pop())
+
+renderAll()
+}
+
+function renderAll(){
+renderSales()
+renderInventory()
 renderInvestment()
 updateDashboard()
 }
 
-/* charts */
+/* dashboard */
 
-let salesChart,profitChart,dailyChart
+function updateDashboard(){
 
-function updateCharts(){
+let sales=0,profit=0,delivery=0,sold=0,invest=0
 
-let months=Object.keys(monthlySales)
-let salesDataArr=Object.values(monthlySales)
-let profitDataArr=Object.values(monthlyProfit)
+salesData.forEach(s=>{
+sales+=s.price*s.qty
+profit+=s.profit
+sold+=s.qty
+if(s.paid==="company") delivery+=s.delivery
+})
 
-let days=Object.keys(dailySales)
-let dailyDataArr=Object.values(dailySales)
+investmentData.forEach(i=>invest+=i.total)
 
-if(salesChart){
-salesChart.destroy()
-profitChart.destroy()
-dailyChart.destroy()
+salesTotal.innerText="₹"+sales
+profitTotal.innerText="₹"+profit
+investmentTotal.innerText="₹"+invest
+shirtSold.innerText=sold
+deliveryTotal.innerText="₹"+delivery
+
 }
 
-salesChart=new Chart(document.getElementById("salesChart"),{
-type:"line",
-data:{labels:months,datasets:[{label:"Sales",data:salesDataArr}]}
+/* chart */
+
+let chart
+
+function updateChart(){
+
+let data={}
+
+salesData.forEach(s=>{
+data[s.date]=(data[s.date]||0)+(s.price*s.qty)
 })
 
-profitChart=new Chart(document.getElementById("profitChart"),{
-type:"line",
-data:{labels:months,datasets:[{label:"Profit",data:profitDataArr}]}
-})
+let labels=Object.keys(data)
+let values=Object.values(data)
 
-dailyChart=new Chart(document.getElementById("dailyChart"),{
+if(chart) chart.destroy()
+
+chart=new Chart(document.getElementById("dailyChart"),{
 type:"line",
-data:{labels:days,datasets:[{label:"Daily",data:dailyDataArr}]}
+data:{labels:labels,datasets:[{data:values,label:"Daily Sales"}]}
 })
 
 }
