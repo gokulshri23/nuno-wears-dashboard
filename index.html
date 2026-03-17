@@ -3,7 +3,7 @@
 <head>
 
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Nuno Wears</title>
+<title>Nuno Wears Dashboard</title>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
@@ -19,18 +19,18 @@ color:white;
 overflow-x:hidden;
 }
 
-/* glass effect */
+/* glass */
 
 .glass{
-background:rgba(255,255,255,0.08);
-backdrop-filter:blur(10px);
+background:rgba(255,255,255,0.06);
+backdrop-filter:blur(18px);
+border:1px solid rgba(255,255,255,0.1);
 border-radius:15px;
 }
 
 /* header */
 
 .header{text-align:center;padding:20px;}
-
 .logo{width:140px;margin:auto;display:block;}
 
 /* layout */
@@ -38,8 +38,11 @@ border-radius:15px;
 .container{display:flex;gap:15px;padding:15px;}
 
 .sidebar{
-width:200px;
-padding:10px;
+width:220px;
+padding:15px;
+position:sticky;
+top:10px;
+height:fit-content;
 }
 
 .sidebar button{
@@ -52,8 +55,6 @@ background:rgba(255,255,255,0.1);
 color:white;
 cursor:pointer;
 }
-
-/* main */
 
 .main{flex:1;min-width:0;}
 
@@ -95,7 +96,7 @@ color:white;
 width:100%;
 }
 
-/* glass button */
+/* buttons */
 
 .btn{
 padding:8px 12px;
@@ -107,13 +108,19 @@ cursor:pointer;
 backdrop-filter:blur(8px);
 }
 
-/* delete icon */
-
 .delete-btn{
 background:none;
 border:none;
 cursor:pointer;
 font-size:14px;
+}
+
+/* undo align */
+
+.undo-wrap{
+display:flex;
+justify-content:flex-end;
+margin-top:10px;
 }
 
 /* table */
@@ -129,6 +136,11 @@ min-width:650px;
 th,td{
 padding:8px;
 text-align:center;
+}
+
+th{
+font-weight:500;
+opacity:0.8;
 }
 
 tr{
@@ -154,9 +166,13 @@ border-bottom:1px solid rgba(255,255,255,0.15);
 display:flex;
 width:100%;
 overflow:auto;
+position:static;
 }
 
-.sidebar button{flex:1;font-size:12px;}
+.sidebar button{
+flex:1;
+font-size:12px;
+}
 
 .cards{grid-template-columns:1fr 1fr;}
 .form-grid{grid-template-columns:1fr 1fr;}
@@ -228,7 +244,9 @@ overflow:auto;
 </table>
 </div>
 
+<div class="undo-wrap">
 <button class="btn" onclick="undoDelete('sales')">Undo</button>
+</div>
 
 </div>
 
@@ -247,11 +265,18 @@ overflow:auto;
 
 <div class="table-wrap">
 <table>
+<thead>
+<tr>
+<th>Month</th><th>Total</th><th></th>
+</tr>
+</thead>
 <tbody id="investmentTable"></tbody>
 </table>
 </div>
 
+<div class="undo-wrap">
 <button class="btn" onclick="undoDelete('investment')">Undo</button>
+</div>
 
 </div>
 
@@ -267,11 +292,22 @@ overflow:auto;
 
 <div class="table-wrap">
 <table>
+<thead>
+<tr>
+<th>Design</th>
+<th>Printed</th>
+<th>Sold</th>
+<th>Remaining</th>
+<th></th>
+</tr>
+</thead>
 <tbody id="inventoryTable"></tbody>
 </table>
 </div>
 
+<div class="undo-wrap">
 <button class="btn" onclick="undoDelete('inventory')">Undo</button>
+</div>
 
 </div>
 
@@ -303,23 +339,7 @@ let deleted={sales:[],investment:[],inventory:[]}
 
 function addInventory(){
 inventoryData.push({name:dname.value,printed:+dqty.value,sold:0})
-renderInventory()
-updateDesign()
-}
-
-function renderInventory(){
-inventoryTable.innerHTML=""
-inventoryData.forEach((i,ind)=>{
-let rem=i.printed-i.sold
-inventoryTable.innerHTML+=`
-<tr>
-<td>${i.name}</td>
-<td>${i.printed}</td>
-<td>${i.sold}</td>
-<td class="${rem<=5?'low':''}">${rem}</td>
-<td><button class="delete-btn" onclick="del('inventory',${ind})">🗑</button></td>
-</tr>`
-})
+renderAll()
 }
 
 function updateDesign(){
@@ -364,7 +384,7 @@ investmentData.push({month:month.value,total})
 renderAll()
 }
 
-/* delete + undo */
+/* delete */
 
 function del(type,index){
 deleted[type].push(JSON.parse(JSON.stringify(eval(type+"Data")[index])))
@@ -384,6 +404,7 @@ function renderAll(){
 renderSales()
 renderInvestment()
 renderInventory()
+updateDesign()
 updateDashboard()
 updateCharts()
 }
@@ -412,6 +433,21 @@ investmentTable.innerHTML+=`
 <td>${i.month}</td>
 <td>${i.total}</td>
 <td><button class="delete-btn" onclick="del('investment',${ind})">🗑</button></td>
+</tr>`
+})
+}
+
+function renderInventory(){
+inventoryTable.innerHTML=""
+inventoryData.forEach((i,ind)=>{
+let rem=i.printed-i.sold
+inventoryTable.innerHTML+=`
+<tr>
+<td>${i.name}</td>
+<td>${i.printed}</td>
+<td>${i.sold}</td>
+<td class="${rem<=5?'low':''}">${rem}</td>
+<td><button class="delete-btn" onclick="del('inventory',${ind})">🗑</button></td>
 </tr>`
 })
 }
@@ -457,12 +493,12 @@ if(monthlyChart) monthlyChart.destroy()
 
 dailyChart=new Chart(document.getElementById("dailyChart"),{
 type:"line",
-data:{labels:Object.keys(daily),datasets:[{label:"Daily",data:Object.values(daily)}]}
+data:{labels:Object.keys(daily),datasets:[{label:"Daily Sales",data:Object.values(daily)}]}
 })
 
 monthlyChart=new Chart(document.getElementById("monthlyChart"),{
 type:"bar",
-data:{labels:Object.keys(monthly),datasets:[{label:"Monthly",data:Object.values(monthly)}]}
+data:{labels:Object.keys(monthly),datasets:[{label:"Monthly Sales",data:Object.values(monthly)}]}
 })
 
 }
