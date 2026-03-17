@@ -56,6 +56,31 @@ color:white;
 cursor:pointer;
 }
 
+/* mobile navbar fix */
+
+@media(max-width:900px){
+
+.container{flex-direction:column;}
+
+.sidebar{
+display:flex;
+width:100%;
+overflow-x:auto;
+gap:6px;
+padding:8px;
+}
+
+.sidebar button{
+flex:1;
+min-width:90px;
+font-size:12px;
+white-space:nowrap;
+}
+
+}
+
+/* main */
+
 .main{flex:1;min-width:0;}
 
 /* cards */
@@ -130,7 +155,7 @@ margin-top:10px;
 table{
 width:100%;
 border-collapse:collapse;
-min-width:650px;
+min-width:750px;
 }
 
 th,td{
@@ -155,29 +180,6 @@ border-bottom:1px solid rgba(255,255,255,0.15);
 
 .section{display:none;}
 .active{display:block;}
-
-/* mobile */
-
-@media(max-width:900px){
-
-.container{flex-direction:column;}
-
-.sidebar{
-display:flex;
-width:100%;
-overflow:auto;
-position:static;
-}
-
-.sidebar button{
-flex:1;
-font-size:12px;
-}
-
-.cards{grid-template-columns:1fr 1fr;}
-.form-grid{grid-template-columns:1fr 1fr;}
-
-}
 
 </style>
 </head>
@@ -267,7 +269,14 @@ font-size:12px;
 <table>
 <thead>
 <tr>
-<th>Month</th><th>Total</th><th></th>
+<th>Month</th>
+<th>Purchase</th>
+<th>Printing</th>
+<th>Packing</th>
+<th>Qty</th>
+<th>Cost/Shirt</th>
+<th>Total</th>
+<th></th>
 </tr>
 </thead>
 <tbody id="investmentTable"></tbody>
@@ -324,36 +333,22 @@ font-size:12px;
 <script>
 
 /* nav */
-
 function show(id){
 document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"))
 document.getElementById(id).classList.add("active")
 }
 
 /* data */
-
 let salesData=[], investmentData=[], inventoryData=[]
 let deleted={sales:[],investment:[],inventory:[]}
 
 /* inventory */
-
 function addInventory(){
 inventoryData.push({name:dname.value,printed:+dqty.value,sold:0})
 renderAll()
 }
 
-function updateDesign(){
-design.innerHTML=""
-inventoryData.forEach(i=>{
-let op=document.createElement("option")
-op.value=i.name
-op.textContent=i.name
-design.appendChild(op)
-})
-}
-
 /* sales */
-
 function addSale(){
 let item=inventoryData.find(i=>i.name===design.value)
 if(!item || item.printed-item.sold<qty.value){alert("No stock");return;}
@@ -377,15 +372,30 @@ renderAll()
 }
 
 /* investment */
-
 function addInvestment(){
-let total=+purchase.value + +printing.value + +packing.value
-investmentData.push({month:month.value,total})
+
+let purchaseVal=+purchase.value
+let printingVal=+printing.value
+let packingVal=+packing.value
+let qtyVal=+count.value
+
+let total=purchaseVal+printingVal+packingVal
+let cost= total/qtyVal
+
+investmentData.push({
+month:month.value,
+purchase:purchaseVal,
+printing:printingVal,
+packing:packingVal,
+qty:qtyVal,
+cost:cost,
+total:total
+})
+
 renderAll()
 }
 
-/* delete */
-
+/* delete + undo */
 function del(type,index){
 deleted[type].push(JSON.parse(JSON.stringify(eval(type+"Data")[index])))
 eval(type+"Data").splice(index,1)
@@ -399,7 +409,6 @@ renderAll()
 }
 
 /* render */
-
 function renderAll(){
 renderSales()
 renderInvestment()
@@ -431,6 +440,11 @@ investmentData.forEach((i,ind)=>{
 investmentTable.innerHTML+=`
 <tr>
 <td>${i.month}</td>
+<td>${i.purchase}</td>
+<td>${i.printing}</td>
+<td>${i.packing}</td>
+<td>${i.qty}</td>
+<td>${i.cost.toFixed(2)}</td>
 <td>${i.total}</td>
 <td><button class="delete-btn" onclick="del('investment',${ind})">🗑</button></td>
 </tr>`
@@ -452,8 +466,17 @@ inventoryTable.innerHTML+=`
 })
 }
 
-/* dashboard */
+function updateDesign(){
+design.innerHTML=""
+inventoryData.forEach(i=>{
+let op=document.createElement("option")
+op.value=i.name
+op.textContent=i.name
+design.appendChild(op)
+})
+}
 
+/* dashboard */
 function updateDashboard(){
 
 let sales=0,profit=0,delivery=0,sold=0,invest=0
@@ -475,7 +498,6 @@ deliveryTotal.innerText="₹"+delivery
 }
 
 /* charts */
-
 let dailyChart,monthlyChart
 
 function updateCharts(){
