@@ -1,268 +1,514 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Nuno Dashboard</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nuno Wears Dashboard</title>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <style>
-body {
-  margin: 0;
-  font-family: Arial;
-  background: #0f0f0f;
-  color: white;
+
+*{box-sizing:border-box;}
+
+body{
+margin:0;
+font-family:-apple-system,BlinkMacSystemFont,"Segoe UI";
+background:linear-gradient(135deg,#0f0f0f,#000);
+color:white;
+overflow-x:hidden;
 }
 
-/* Glass UI */
-.glass {
-  background: rgba(255,255,255,0.08);
-  backdrop-filter: blur(12px);
-  border-radius: 15px;
-  padding: 15px;
-  margin: 10px;
+/* GLASS UI */
+.glass{
+background:rgba(255,255,255,0.06);
+backdrop-filter:blur(18px);
+border:1px solid rgba(255,255,255,0.1);
+border-radius:15px;
 }
 
-/* Buttons */
-button {
-  padding: 8px 12px;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
-  background: rgba(255,255,255,0.1);
-  color: white;
+/* HEADER */
+.header{text-align:center;padding:20px;}
+.logo{width:140px;display:block;margin:auto;}
+
+/* LAYOUT */
+.container{display:flex;gap:15px;padding:15px;}
+
+.sidebar{
+width:220px;
+padding:15px;
+position:sticky;
+top:10px;
 }
 
-/* Inputs */
-input, select {
-  padding: 8px;
-  margin: 5px;
-  border-radius: 8px;
-  border: none;
+.sidebar button{
+width:100%;
+margin:5px 0;
+padding:10px;
+border:none;
+border-radius:10px;
+background:rgba(255,255,255,0.1);
+color:white;
+cursor:pointer;
 }
 
-/* Mobile Fix */
-@media(max-width:600px){
-  .row {
-    display: flex;
-    flex-direction: column;
-  }
+/* MOBILE NAV */
+@media(max-width:900px){
+.container{flex-direction:column;}
+
+.sidebar{
+display:flex;
+overflow-x:auto;
+gap:6px;
+width:100%;
 }
+
+.sidebar button{
+flex:1;
+min-width:90px;
+font-size:12px;
+}
+}
+
+/* MAIN */
+.main{flex:1;min-width:0;}
+
+/* DASHBOARD CARDS */
+.cards{
+display:grid;
+grid-template-columns:repeat(5,1fr);
+gap:12px;
+}
+
+@media(max-width:900px){
+.cards{grid-template-columns:repeat(2,1fr);}
+.card:last-child{grid-column:span 2;}
+}
+
+.card{
+padding:15px;
+text-align:center;
+}
+
+/* PANEL */
+.panel{margin-top:15px;padding:15px;}
+
+/* FORMS */
+.form-grid{
+display:grid;
+grid-template-columns:repeat(6,1fr);
+gap:8px;
+margin-bottom:10px;
+}
+
+@media(max-width:900px){
+.form-grid{
+grid-template-columns:repeat(2,1fr);
+gap:10px;
+}
+.form-grid button{
+grid-column:span 2;
+}
+}
+
+input,select{
+padding:8px;
+border:none;
+border-radius:6px;
+background:rgba(255,255,255,0.1);
+color:white;
+width:100%;
+font-size:14px;
+}
+
+/* BUTTONS */
+.btn{
+padding:8px 12px;
+border:none;
+border-radius:10px;
+background:rgba(255,255,255,0.15);
+color:white;
+cursor:pointer;
+}
+
+.delete-btn{
+background:none;
+border:none;
+cursor:pointer;
+font-size:14px;
+}
+
+/* UNDO ALIGN */
+.undo-wrap{
+display:flex;
+justify-content:flex-end;
+margin-top:10px;
+}
+
+/* TABLE */
+.table-wrap{overflow-x:auto;}
+
+table{
+width:100%;
+border-collapse:collapse;
+min-width:750px;
+}
+
+th,td{
+padding:8px;
+text-align:center;
+}
+
+th{
+opacity:0.8;
+font-weight:500;
+}
+
+tr{
+border-bottom:1px solid rgba(255,255,255,0.15);
+}
+
+/* LOW STOCK */
+.low{color:#ff6b6b;}
+
+/* SECTIONS */
+.section{display:none;}
+.active{display:block;}
+
 </style>
 </head>
 
 <body>
 
-<h2 style="text-align:center;">NUNO WEARS DASHBOARD</h2>
+<div class="header">
+<img src="logo.png" class="logo">
+<h2>Nuno Wears Dashboard</h2>
+</div>
+
+<div class="container">
+
+<div class="sidebar glass">
+<button onclick="show('dashboard')">Dashboard</button>
+<button onclick="show('sales')">Sales</button>
+<button onclick="show('investment')">Investment</button>
+<button onclick="show('inventory')">Inventory</button>
+<button onclick="show('analytics')">Analytics</button>
+</div>
+
+<div class="main">
+
+<!-- DASHBOARD -->
+<div id="dashboard" class="section active">
+<div class="cards">
+<div class="card glass">Sales<br><span id="salesTotal">₹0</span></div>
+<div class="card glass">Investment<br><span id="investmentTotal">₹0</span></div>
+<div class="card glass">Profit<br><span id="profitTotal">₹0</span></div>
+<div class="card glass">Sold<br><span id="shirtSold">0</span></div>
+<div class="card glass">Delivery<br><span id="deliveryTotal">₹0</span></div>
+</div>
+</div>
 
 <!-- SALES -->
-<div class="glass">
-  <h3>Sales</h3>
+<div id="sales" class="section panel glass">
 
-  <input type="date" id="date">
-  <input type="number" id="price" placeholder="Total Price">
-  <input type="number" id="qty" placeholder="T-shirt Count">
+<div class="form-grid">
+<input type="date" id="date">
+<select id="design"></select>
+<input type="number" id="price" placeholder="Price">
+<input type="number" id="qty" placeholder="Qty">
+<input type="number" id="delivery" placeholder="Delivery">
+<select id="paid">
+<option value="customer">Customer</option>
+<option value="company">Company</option>
+</select>
+<button class="btn" onclick="addSale()">Add</button>
+</div>
 
-  <select id="delivery">
-    <option value="customer">Customer Pays</option>
-    <option value="company">Company Pays</option>
-  </select>
+<div class="table-wrap">
+<table>
+<thead>
+<tr>
+<th>Date</th><th>Design</th><th>Price</th><th>Qty</th>
+<th>Delivery</th><th>Profit</th><th></th>
+</tr>
+</thead>
+<tbody id="salesTable"></tbody>
+</table>
+</div>
 
-  <input type="number" id="deliveryCost" placeholder="Delivery Cost">
+<div class="undo-wrap">
+<button class="btn" onclick="undoDelete('sales')">Undo</button>
+</div>
 
-  <button onclick="addSale()">Add</button>
-
-  <div id="salesList"></div>
 </div>
 
 <!-- INVESTMENT -->
-<div class="glass">
-  <h3>Investment</h3>
+<div id="investment" class="section panel glass">
 
-  <input type="month" id="month">
-  <input type="number" id="purchase" placeholder="Purchase Cost">
-  <input type="number" id="count" placeholder="T-shirt Count">
-  <input type="number" id="printing" placeholder="Printing Cost">
+<div class="form-grid">
+<input type="month" id="month">
+<input type="number" id="purchase" placeholder="Purchase">
+<input type="number" id="printing" placeholder="Printing">
+<input type="number" id="packing" placeholder="Packing">
+<input type="number" id="count" placeholder="Qty">
+<button class="btn" onclick="addInvestment()">Add</button>
+</div>
 
-  <button onclick="addInvestment()">Add</button>
+<div class="table-wrap">
+<table>
+<thead>
+<tr>
+<th>Month</th>
+<th>Purchase</th>
+<th>Printing</th>
+<th>Packing</th>
+<th>Qty</th>
+<th>Cost/Shirt</th>
+<th>Total</th>
+<th></th>
+</tr>
+</thead>
+<tbody id="investmentTable"></tbody>
+</table>
+</div>
 
-  <div id="investmentList"></div>
+<div class="undo-wrap">
+<button class="btn" onclick="undoDelete('investment')">Undo</button>
+</div>
+
 </div>
 
 <!-- INVENTORY -->
-<div class="glass">
-  <h3>Inventory</h3>
+<div id="inventory" class="section panel glass">
 
-  <input type="text" id="design" placeholder="Design Name">
-  <input type="number" id="stock" placeholder="Stock">
-
-  <button onclick="addInventory()">Add</button>
-
-  <div id="inventoryList"></div>
+<div class="form-grid">
+<input id="dname" placeholder="Design">
+<input id="dqty" type="number" placeholder="Qty">
+<button class="btn" onclick="addInventory()">Add</button>
 </div>
 
-<!-- DASHBOARD -->
-<div class="glass">
-  <h3>Dashboard</h3>
-
-  <p>Total Sales: <span id="totalSales">0</span></p>
-  <p>Total Investment: <span id="totalInvestment">0</span></p>
-  <p>Profit: <span id="profit">0</span></p>
+<div class="table-wrap">
+<table>
+<thead>
+<tr>
+<th>Design</th>
+<th>Printed</th>
+<th>Sold</th>
+<th>Remaining</th>
+<th></th>
+</tr>
+</thead>
+<tbody id="inventoryTable"></tbody>
+</table>
 </div>
 
-<!-- FIREBASE -->
+<div class="undo-wrap">
+<button class="btn" onclick="undoDelete('inventory')">Undo</button>
+</div>
+
+</div>
+
+<!-- ANALYTICS -->
+<div id="analytics" class="section panel glass">
+<canvas id="dailyChart"></canvas>
+<canvas id="monthlyChart"></canvas>
+</div>
+
+</div>
+</div>
+
+<script>
+
+/* NAV */
+function show(id){
+document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"))
+document.getElementById(id).classList.add("active")
+}
+
+/* DATA */
+let salesData=[],investmentData=[],inventoryData=[]
+let deleted={sales:[],investment:[],inventory:[]}
+
+/* INVENTORY */
+function addInventory(){
+inventoryData.push({name:dname.value,printed:+dqty.value,sold:0})
+renderAll()
+}
+
+/* SALES */
+function addSale(){
+let item=inventoryData.find(i=>i.name===design.value)
+if(!item || item.printed-item.sold<qty.value){alert("No stock");return;}
+
+item.sold+=+qty.value
+
+let profit=(price.value*qty.value)
+if(paid.value==="company") profit-=+delivery.value
+
+salesData.push({
+date:date.value,design:design.value,
+price:+price.value,qty:+qty.value,
+delivery:+delivery.value,paid:paid.value,
+profit
+})
+
+renderAll()
+}
+
+/* INVESTMENT */
+function addInvestment(){
+let total=+purchase.value+ +printing.value+ +packing.value
+let cost= total / +count.value
+
+investmentData.push({
+month:month.value,
+purchase:+purchase.value,
+printing:+printing.value,
+packing:+packing.value,
+qty:+count.value,
+cost:cost,
+total:total
+})
+
+renderAll()
+}
+
+/* DELETE + UNDO */
+function del(type,i){
+deleted[type].push(JSON.parse(JSON.stringify(eval(type+"Data")[i])))
+eval(type+"Data").splice(i,1)
+renderAll()
+}
+function undoDelete(type){
+if(!deleted[type].length)return
+eval(type+"Data").push(deleted[type].pop())
+renderAll()
+}
+
+/* RENDER */
+function renderAll(){
+renderSales();renderInvestment();renderInventory();
+updateDesign();updateDashboard();updateCharts();
+}
+
+function renderSales(){
+salesTable.innerHTML=""
+salesData.forEach((s,i)=>{
+salesTable.innerHTML+=`
+<tr>
+<td>${s.date}</td><td>${s.design}</td><td>${s.price}</td>
+<td>${s.qty}</td><td>${s.delivery}</td>
+<td>${s.profit}</td>
+<td><button class="delete-btn" onclick="del('sales',${i})">🗑</button></td>
+</tr>`
+})
+}
+
+function renderInvestment(){
+investmentTable.innerHTML=""
+investmentData.forEach((i,ind)=>{
+investmentTable.innerHTML+=`
+<tr>
+<td>${i.month}</td><td>${i.purchase}</td>
+<td>${i.printing}</td><td>${i.packing}</td>
+<td>${i.qty}</td><td>${i.cost.toFixed(2)}</td>
+<td>${i.total}</td>
+<td><button class="delete-btn" onclick="del('investment',${ind})">🗑</button></td>
+</tr>`
+})
+}
+
+function renderInventory(){
+inventoryTable.innerHTML=""
+inventoryData.forEach((i,ind)=>{
+let rem=i.printed-i.sold
+inventoryTable.innerHTML+=`
+<tr>
+<td>${i.name}</td><td>${i.printed}</td>
+<td>${i.sold}</td>
+<td class="${rem<=5?'low':''}">${rem}</td>
+<td><button class="delete-btn" onclick="del('inventory',${ind})">🗑</button></td>
+</tr>`
+})
+}
+
+function updateDesign(){
+design.innerHTML=""
+inventoryData.forEach(i=>{
+let op=document.createElement("option")
+op.value=i.name
+op.textContent=i.name
+design.appendChild(op)
+})
+}
+
+/* DASHBOARD */
+function updateDashboard(){
+let sales=0,profit=0,delivery=0,sold=0,invest=0
+
+salesData.forEach(s=>{
+sales+=s.price*s.qty
+profit+=s.profit
+sold+=s.qty
+if(s.paid==="company") delivery+=s.delivery
+})
+
+investmentData.forEach(i=>invest+=i.total)
+
+salesTotal.innerText="₹"+sales
+profitTotal.innerText="₹"+profit
+investmentTotal.innerText="₹"+invest
+shirtSold.innerText=sold
+deliveryTotal.innerText="₹"+delivery
+}
+
+/* CHARTS */
+let dailyChart,monthlyChart
+
+function updateCharts(){
+
+let daily={},monthly={}
+
+salesData.forEach(s=>{
+daily[s.date]=(daily[s.date]||0)+(s.price*s.qty)
+let m=s.date.slice(0,7)
+monthly[m]=(monthly[m]||0)+(s.price*s.qty)
+})
+
+if(dailyChart) dailyChart.destroy()
+if(monthlyChart) monthlyChart.destroy()
+
+dailyChart=new Chart(dailyChart=document.getElementById("dailyChart"),{
+type:"line",
+data:{labels:Object.keys(daily),
+datasets:[{label:"Daily Sales",data:Object.values(daily)}]}
+})
+
+monthlyChart=new Chart(document.getElementById("monthlyChart"),{
+type:"bar",
+data:{labels:Object.keys(monthly),
+datasets:[{label:"Monthly Sales",data:Object.values(monthly)}]}
+})
+
+}
+
+</script>
+<!-- Firebase -->
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 
 <script>
-/* 🔥 PASTE YOUR FIREBASE CONFIG HERE */
 const firebaseConfig = {
-  apiKey: "YOUR_KEY",
-  authDomain: "YOUR_DOMAIN",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_BUCKET",
-  messagingSenderId: "YOUR_ID",
-  appId: "YOUR_APP_ID"
+  apiKey: "AIzaSyDpK7V0pwY3PrVHR3v8_AHJ1d9ZCd8sjXg",
+  authDomain: "nuno-wears-dashboard.firebaseapp.com",
+  projectId: "nuno-wears-dashboard",
+  storageBucket: "nuno-wears-dashboard.firebasestorage.app",
+  messagingSenderId: "405785694817",
+  appId: "1:405785694817:web:80ac1e6c436c0636f75020"
 };
 
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
-
-/* DATA */
-let sales = [];
-let investments = [];
-let inventory = [];
-
-/* SAVE */
-async function saveData() {
-  await db.collection("nunoData").doc("main").set({
-    sales, investments, inventory
-  });
-}
-
-/* LOAD */
-async function loadData() {
-  const doc = await db.collection("nunoData").doc("main").get();
-  if (doc.exists) {
-    let data = doc.data();
-    sales = data.sales || [];
-    investments = data.investments || [];
-    inventory = data.inventory || [];
-    updateUI();
-  }
-}
-
-/* SALES */
-function addSale() {
-  let s = {
-    date: date.value,
-    price: Number(price.value),
-    qty: Number(qty.value),
-    delivery: delivery.value,
-    deliveryCost: Number(deliveryCost.value)
-  };
-
-  sales.push(s);
-
-  if (s.delivery === "company") {
-    s.price -= s.deliveryCost;
-  }
-
-  saveData();
-  updateUI();
-}
-
-/* INVESTMENT */
-function addInvestment() {
-  let inv = {
-    month: month.value,
-    purchase: Number(purchase.value),
-    count: Number(count.value),
-    printing: Number(printing.value)
-  };
-
-  inv.total = inv.purchase + inv.printing;
-
-  investments.push(inv);
-
-  saveData();
-  updateUI();
-}
-
-/* INVENTORY */
-function addInventory() {
-  let item = {
-    design: design.value,
-    stock: Number(stock.value)
-  };
-
-  inventory.push(item);
-
-  saveData();
-  updateUI();
-}
-
-/* UI UPDATE */
-function updateUI() {
-  let totalSales = 0;
-  let totalInvestment = 0;
-
-  salesList.innerHTML = "";
-  investmentList.innerHTML = "";
-  inventoryList.innerHTML = "";
-
-  sales.forEach((s, i) => {
-    totalSales += s.price;
-
-    salesList.innerHTML += `
-      <p>${s.date} | ₹${s.price} | Qty: ${s.qty}
-      <button onclick="deleteSale(${i})">🗑</button></p>
-    `;
-  });
-
-  investments.forEach((i, index) => {
-    totalInvestment += i.total;
-
-    investmentList.innerHTML += `
-      <p>${i.month} | ₹${i.total}
-      <button onclick="deleteInvestment(${index})">🗑</button></p>
-    `;
-  });
-
-  inventory.forEach((i, index) => {
-    inventoryList.innerHTML += `
-      <p>${i.design} | Stock: ${i.stock}
-      <button onclick="deleteInventory(${index})">🗑</button></p>
-    `;
-  });
-
-  document.getElementById("totalSales").innerText = totalSales;
-  document.getElementById("totalInvestment").innerText = totalInvestment;
-  document.getElementById("profit").innerText = totalSales - totalInvestment;
-}
-
-/* DELETE */
-function deleteSale(i){
-  sales.splice(i,1);
-  saveData();
-  updateUI();
-}
-
-function deleteInvestment(i){
-  investments.splice(i,1);
-  saveData();
-  updateUI();
-}
-
-function deleteInventory(i){
-  inventory.splice(i,1);
-  saveData();
-  updateUI();
-}
-
-/* LOAD ON START */
-loadData();
-
 </script>
-
 </body>
 </html>
