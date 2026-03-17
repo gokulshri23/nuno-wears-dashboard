@@ -318,6 +318,29 @@ border-bottom:1px solid rgba(255,255,255,0.15);
 </div>
 
 <script>
+let salesData = [];
+let investmentData = [];
+let inventoryData = [];
+async function saveData() {
+  await db.collection("nunoData").doc("main").set({
+    salesData,
+    investmentData,
+    inventoryData
+  });
+}
+async function loadData() {
+  const doc = await db.collection("nunoData").doc("main").get();
+
+  if (doc.exists) {
+    const data = doc.data();
+
+    salesData = data.salesData || [];
+    investmentData = data.investmentData || [];
+    inventoryData = data.inventoryData || [];
+
+    renderAll(); // VERY IMPORTANT (refresh UI)
+  }
+}
 
 /* NAV */
 function show(id){
@@ -332,6 +355,7 @@ let deleted={sales:[],investment:[],inventory:[]}
 /* INVENTORY */
 function addInventory(){
 inventoryData.push({name:dname.value,printed:+dqty.value,sold:0})
+saveData()
 renderAll()
 }
 
@@ -351,7 +375,7 @@ price:+price.value,qty:+qty.value,
 delivery:+delivery.value,paid:paid.value,
 profit
 })
-
+saveData()
 renderAll()
 }
 
@@ -369,6 +393,7 @@ qty:+count.value,
 cost:cost,
 total:total
 })
+saveData()
 
 renderAll()
 }
@@ -377,6 +402,7 @@ renderAll()
 function del(type,i){
 deleted[type].push(JSON.parse(JSON.stringify(eval(type+"Data")[i])))
 eval(type+"Data").splice(i,1)
+saveData()
 renderAll()
 }
 function undoDelete(type){
@@ -491,7 +517,7 @@ datasets:[{label:"Monthly Sales",data:Object.values(monthly)}]}
 })
 
 }
-
+loadData();
 </script>
 <!-- Firebase -->
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
