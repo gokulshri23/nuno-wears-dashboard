@@ -329,28 +329,13 @@ document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"))
 document.getElementById(id).classList.add("active")
 }
 
-/* FIREBASE SAVE */
+/* SAVE DATA */
 async function saveData() {
   await db.collection("nunoData").doc("main").set({
     salesData,
     investmentData,
     inventoryData
   });
-}
-
-/* FIREBASE LOAD */
-async function loadData() {
-  const doc = await db.collection("nunoData").doc("main").get();
-
-  if (doc.exists) {
-    const data = doc.data();
-
-    salesData = data.salesData || [];
-    investmentData = data.investmentData || [];
-    inventoryData = data.inventoryData || [];
-
-    renderAll();
-  }
 }
 
 /* INVENTORY */
@@ -425,7 +410,7 @@ if(!deleted[type].length)return
 
 eval(type+"Data").push(deleted[type].pop())
 
-saveData()   // 🔥 FIXED (important)
+saveData()
 renderAll()
 }
 
@@ -550,6 +535,40 @@ datasets:[{label:"Monthly Sales",data:Object.values(monthly)}]
 })
 
 }
+</script>
+
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
+<script>
+const firebaseConfig = {
+  apiKey: "YOUR_API_KEY",
+  authDomain: "nuno-wears-dashboard.firebaseapp.com",
+  projectId: "nuno-wears-dashboard",
+  storageBucket: "nuno-wears-dashboard.firebasestorage.app",
+  messagingSenderId: "405785694817",
+  appId: "1:405785694817:web:80ac1e6c436c0636f75020"
+};
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
+/* 🔥 REALTIME SYNC */
+db.collection("nunoData").doc("main")
+.onSnapshot((doc) => {
+
+  if (doc.exists) {
+    const data = doc.data();
+
+    salesData = data.salesData || [];
+    investmentData = data.investmentData || [];
+    inventoryData = data.inventoryData || [];
+
+    renderAll();
+  }
+
+});
 </script>
 
 <!-- Firebase -->
