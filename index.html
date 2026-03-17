@@ -2,7 +2,6 @@
 <html>
 
 <head>
-
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Nuno Wears Dashboard</title>
 
@@ -10,9 +9,7 @@
 
 <style>
 
-*{
-box-sizing:border-box;
-}
+*{box-sizing:border-box;}
 
 body{
 margin:0;
@@ -22,14 +19,18 @@ color:white;
 overflow-x:hidden;
 }
 
-/* HEADER */
-
 .header{
 text-align:center;
 padding:20px;
 }
 
-/* LAYOUT */
+.logo{
+width:150px;
+display:block;
+margin:auto;
+}
+
+/* layout */
 
 .container{
 display:flex;
@@ -37,14 +38,11 @@ gap:20px;
 padding:15px;
 }
 
-/* SIDEBAR */
-
 .sidebar{
 width:200px;
 padding:15px;
 border-radius:20px;
 background:rgba(255,255,255,0.05);
-border:1px solid rgba(255,255,255,0.1);
 }
 
 .sidebar button{
@@ -58,14 +56,10 @@ color:white;
 cursor:pointer;
 }
 
-/* MAIN */
-
 .main{
 flex:1;
 min-width:0;
 }
-
-/* CARDS */
 
 .cards{
 display:grid;
@@ -77,25 +71,19 @@ gap:12px;
 padding:15px;
 border-radius:15px;
 background:rgba(255,255,255,0.06);
-border:1px solid rgba(255,255,255,0.1);
 text-align:center;
 }
 
-.card p{
-font-size:20px;
-}
-
-/* PANELS */
+/* panel */
 
 .panel{
 margin-top:20px;
 padding:15px;
 border-radius:15px;
 background:rgba(255,255,255,0.05);
-border:1px solid rgba(255,255,255,0.1);
 }
 
-/* FORM */
+/* form */
 
 .form-grid{
 display:grid;
@@ -122,11 +110,10 @@ color:white;
 cursor:pointer;
 }
 
-/* TABLE */
+/* table */
 
 .table-container{
 overflow-x:auto;
-width:100%;
 }
 
 table{
@@ -145,23 +132,16 @@ tr{
 border-bottom:1px solid rgba(255,255,255,0.15);
 }
 
-/* SECTIONS */
+/* sections */
 
-.section{
-display:none;
-}
+.section{display:none;}
+.active{display:block;}
 
-.active{
-display:block;
-}
-
-/* MOBILE */
+/* mobile */
 
 @media(max-width:900px){
 
-.container{
-flex-direction:column;
-}
+.container{flex-direction:column;}
 
 .sidebar{
 display:flex;
@@ -171,40 +151,33 @@ overflow:auto;
 
 .sidebar button{
 flex:1;
-margin:3px;
 font-size:12px;
+margin:3px;
 }
 
-.cards{
-grid-template-columns:1fr 1fr;
-}
-
-.form-grid{
-grid-template-columns:1fr 1fr;
-}
+.cards{grid-template-columns:1fr 1fr;}
+.form-grid{grid-template-columns:1fr 1fr;}
 
 }
 
 </style>
-
 </head>
 
 <body>
 
 <div class="header">
+<img src="logo.png" class="logo">
 <h2>Nuno Wears Dashboard</h2>
 </div>
 
 <div class="container">
 
 <div class="sidebar">
-
 <button onclick="showSection('dashboard')">Dashboard</button>
 <button onclick="showSection('sales')">Sales</button>
 <button onclick="showSection('investment')">Investment</button>
 <button onclick="showSection('inventory')">Inventory</button>
 <button onclick="showSection('analytics')">Analytics</button>
-
 </div>
 
 <div class="main">
@@ -215,30 +188,11 @@ grid-template-columns:1fr 1fr;
 
 <div class="cards">
 
-<div class="card">
-<h3>Total Sales</h3>
-<p id="salesTotal">₹0</p>
-</div>
-
-<div class="card">
-<h3>Total Investment</h3>
-<p id="investmentTotal">₹0</p>
-</div>
-
-<div class="card">
-<h3>Total Profit</h3>
-<p id="profitTotal">₹0</p>
-</div>
-
-<div class="card">
-<h3>T-shirts Sold</h3>
-<p id="shirtSold">0</p>
-</div>
-
-<div class="card">
-<h3>Delivery Paid</h3>
-<p id="deliveryInvestment">₹0</p>
-</div>
+<div class="card"><h3>Total Sales</h3><p id="salesTotal">₹0</p></div>
+<div class="card"><h3>Total Investment</h3><p id="investmentTotal">₹0</p></div>
+<div class="card"><h3>Total Profit</h3><p id="profitTotal">₹0</p></div>
+<div class="card"><h3>T-Shirts Sold</h3><p id="shirtSold">0</p></div>
+<div class="card"><h3>Delivery Paid</h3><p id="deliveryInvestment">₹0</p></div>
 
 </div>
 
@@ -253,13 +207,9 @@ grid-template-columns:1fr 1fr;
 <div class="form-grid">
 
 <input type="date" id="saleDate">
-
 <select id="designSelect"></select>
-
 <input type="number" id="salePrice" placeholder="Price">
-
 <input type="number" id="saleQty" placeholder="Qty">
-
 <input type="number" id="deliveryCharge" placeholder="Delivery">
 
 <select id="deliveryPaidBy">
@@ -272,9 +222,7 @@ grid-template-columns:1fr 1fr;
 </div>
 
 <div class="table-container">
-
 <table>
-
 <tr>
 <th>Date</th>
 <th>Design</th>
@@ -282,12 +230,10 @@ grid-template-columns:1fr 1fr;
 <th>Qty</th>
 <th>Delivery</th>
 <th>Profit</th>
+<th>Delete</th>
 </tr>
-
 <tbody id="salesTable"></tbody>
-
 </table>
-
 </div>
 
 </div>
@@ -296,7 +242,7 @@ grid-template-columns:1fr 1fr;
 
 <div id="investment" class="section panel">
 
-<h3>Monthly Investment</h3>
+<h3>Investment</h3>
 
 <div class="form-grid">
 
@@ -311,9 +257,7 @@ grid-template-columns:1fr 1fr;
 </div>
 
 <div class="table-container">
-
 <table>
-
 <tr>
 <th>Month</th>
 <th>Purchase</th>
@@ -322,12 +266,10 @@ grid-template-columns:1fr 1fr;
 <th>Qty</th>
 <th>Cost/Shirt</th>
 <th>Total</th>
+<th>Delete</th>
 </tr>
-
 <tbody id="investmentTable"></tbody>
-
 </table>
-
 </div>
 
 </div>
@@ -348,20 +290,16 @@ grid-template-columns:1fr 1fr;
 </div>
 
 <div class="table-container">
-
 <table>
-
 <tr>
 <th>Design</th>
 <th>Printed</th>
 <th>Sold</th>
 <th>Remaining</th>
+<th>Delete</th>
 </tr>
-
 <tbody id="inventoryTable"></tbody>
-
 </table>
-
 </div>
 
 </div>
@@ -370,46 +308,209 @@ grid-template-columns:1fr 1fr;
 
 <div id="analytics" class="section panel">
 
-<h3>Sales Growth</h3>
+<h3>Monthly Sales</h3>
 <canvas id="salesChart"></canvas>
 
-<br>
-
-<h3>Profit Growth</h3>
+<h3>Monthly Profit</h3>
 <canvas id="profitChart"></canvas>
 
-<br>
-
-<h3>Daily Sales Growth</h3>
+<h3>Daily Sales</h3>
 <canvas id="dailyChart"></canvas>
 
 </div>
 
 </div>
-
 </div>
 
 <script>
+
+/* navigation */
 
 function showSection(id){
 document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"))
 document.getElementById(id).classList.add("active")
 }
 
-let costPerShirt=0
+/* data */
+
+let salesData=[]
+let investmentData=[]
+let inventoryData=[]
+
 let totalSales=0
 let totalProfit=0
 let totalInvestment=0
 let deliveryInvestment=0
 let shirtsSold=0
 
+let costPerShirt=0
+
 let monthlySales={}
 let monthlyProfit={}
 let dailySales={}
 
-let inventory={}
+/* dashboard */
 
-/* INVESTMENT */
+function updateDashboard(){
+salesTotal.innerText="₹"+totalSales
+profitTotal.innerText="₹"+totalProfit
+investmentTotal.innerText="₹"+totalInvestment
+shirtSold.innerText=shirtsSold
+deliveryInvestment.innerText="₹"+deliveryInvestment
+}
+
+/* inventory */
+
+function addInventory(){
+
+inventoryData.push({
+name:designName.value,
+printed:Number(designCount.value),
+sold:0
+})
+
+renderInventory()
+updateDesignDropdown()
+}
+
+function renderInventory(){
+
+let html=""
+
+inventoryData.forEach((i,index)=>{
+
+let remaining=i.printed-i.sold
+
+html+=`
+<tr>
+<td>${i.name}</td>
+<td>${i.printed}</td>
+<td>${i.sold}</td>
+<td>${remaining}</td>
+<td><button onclick="deleteInventory(${index})">❌</button></td>
+</tr>
+`
+
+})
+
+inventoryTable.innerHTML=html
+}
+
+function deleteInventory(index){
+inventoryData.splice(index,1)
+renderInventory()
+updateDesignDropdown()
+}
+
+function updateDesignDropdown(){
+
+designSelect.innerHTML=""
+
+inventoryData.forEach(i=>{
+let op=document.createElement("option")
+op.value=i.name
+op.textContent=i.name
+designSelect.appendChild(op)
+})
+
+}
+
+/* sales */
+
+function addSale(){
+
+let date=saleDate.value
+let design=designSelect.value
+let price=Number(salePrice.value)
+let qty=Number(saleQty.value)
+let delivery=Number(deliveryCharge.value)
+let paidBy=deliveryPaidBy.value
+
+let item=inventoryData.find(i=>i.name===design)
+
+if(item.printed-item.sold<qty){
+alert("Not enough stock")
+return
+}
+
+item.sold+=qty
+
+let saleValue=price*qty
+let profit=(price-costPerShirt)*qty
+
+if(paidBy==="company"){
+profit-=delivery
+deliveryInvestment+=delivery
+}
+
+totalSales+=saleValue
+totalProfit+=profit
+shirtsSold+=qty
+
+salesData.push({date,design,price,qty,delivery,profit})
+
+if(!monthlySales[date.substring(0,7)]) monthlySales[date.substring(0,7)]=0
+monthlySales[date.substring(0,7)]+=saleValue
+
+if(!monthlyProfit[date.substring(0,7)]) monthlyProfit[date.substring(0,7)]=0
+monthlyProfit[date.substring(0,7)]+=profit
+
+if(!dailySales[date]) dailySales[date]=0
+dailySales[date]+=saleValue
+
+renderSales()
+renderInventory()
+updateDashboard()
+updateCharts()
+
+}
+
+/* render sales */
+
+function renderSales(){
+
+let html=""
+
+salesData.forEach((s,index)=>{
+
+html+=`
+<tr>
+<td>${s.date}</td>
+<td>${s.design}</td>
+<td>${s.price}</td>
+<td>${s.qty}</td>
+<td>${s.delivery}</td>
+<td>${s.profit.toFixed(2)}</td>
+<td><button onclick="deleteSale(${index})">❌</button></td>
+</tr>
+`
+
+})
+
+salesTable.innerHTML=html
+}
+
+/* delete sale */
+
+function deleteSale(index){
+
+let s=salesData[index]
+
+totalSales-=s.price*s.qty
+totalProfit-=s.profit
+shirtsSold-=s.qty
+
+let item=inventoryData.find(i=>i.name===s.design)
+if(item) item.sold-=s.qty
+
+salesData.splice(index,1)
+
+renderSales()
+renderInventory()
+updateDashboard()
+}
+
+/* investment */
 
 function addInvestment(){
 
@@ -421,163 +522,64 @@ let qty=Number(shirtCount.value)
 let total=purchase+printing+packing
 
 costPerShirt=total/qty
-
 totalInvestment+=total
 
-investmentTotal.innerText="₹"+totalInvestment
+investmentData.push({
+month:invMonth.value,
+purchase,printing,packing,qty,total
+})
 
-investmentTable.innerHTML+=`
-<tr>
-<td>${invMonth.value}</td>
-<td>${purchase}</td>
-<td>${printing}</td>
-<td>${packing}</td>
-<td>${qty}</td>
-<td>${costPerShirt.toFixed(2)}</td>
-<td>${total}</td>
-</tr>
-`
-
+renderInvestment()
+updateDashboard()
 }
 
-/* INVENTORY */
-
-function addInventory(){
-
-let name=designName.value
-let qty=Number(designCount.value)
-
-inventory[name]={printed:qty,sold:0}
-
-updateDesignDropdown()
-renderInventory()
-
-}
-
-function updateDesignDropdown(){
-
-let select=document.getElementById("designSelect")
-select.innerHTML=""
-
-for(let d in inventory){
-
-let option=document.createElement("option")
-option.value=d
-option.textContent=d
-
-select.appendChild(option)
-
-}
-
-}
-
-function renderInventory(){
+function renderInvestment(){
 
 let html=""
 
-for(let d in inventory){
+investmentData.forEach((i,index)=>{
 
-let remaining=inventory[d].printed-inventory[d].sold
+let cost=i.total/i.qty
 
 html+=`
 <tr>
-<td>${d}</td>
-<td>${inventory[d].printed}</td>
-<td>${inventory[d].sold}</td>
-<td>${remaining}</td>
+<td>${i.month}</td>
+<td>${i.purchase}</td>
+<td>${i.printing}</td>
+<td>${i.packing}</td>
+<td>${i.qty}</td>
+<td>${cost.toFixed(2)}</td>
+<td>${i.total}</td>
+<td><button onclick="deleteInvestment(${index})">❌</button></td>
 </tr>
 `
 
+})
+
+investmentTable.innerHTML=html
 }
 
-inventoryTable.innerHTML=html
+function deleteInvestment(index){
 
+totalInvestment-=investmentData[index].total
+investmentData.splice(index,1)
+
+renderInvestment()
+updateDashboard()
 }
 
-/* SALES */
+/* charts */
 
-function addSale(){
-
-let date=saleDate.value
-let design=designSelect.value
-let price=Number(salePrice.value)
-let qty=Number(saleQty.value)
-let delivery=Number(deliveryCharge.value)
-let paidBy=deliveryPaidBy.value
-
-if(inventory[design].printed-inventory[design].sold<qty){
-alert("Not enough stock")
-return
-}
-
-inventory[design].sold+=qty
-renderInventory()
-
-let saleValue=price*qty
-
-let profit
-
-if(paidBy==="company"){
-profit=(price-costPerShirt)*qty-delivery
-deliveryInvestment+=delivery
-}else{
-profit=(price-costPerShirt)*qty
-}
-
-totalSales+=saleValue
-totalProfit+=profit
-shirtsSold+=qty
-
-salesTotal.innerText="₹"+totalSales
-profitTotal.innerText="₹"+totalProfit
-shirtSold.innerText=shirtsSold
-deliveryInvestment.innerText="₹"+deliveryInvestment
-
-let month=date.substring(0,7)
-
-if(!monthlySales[month]){
-monthlySales[month]=0
-monthlyProfit[month]=0
-}
-
-monthlySales[month]+=saleValue
-monthlyProfit[month]+=profit
-
-if(!dailySales[date]){
-dailySales[date]=0
-}
-
-dailySales[date]+=saleValue
-
-updateCharts()
-
-salesTable.innerHTML+=`
-<tr>
-<td>${date}</td>
-<td>${design}</td>
-<td>${price}</td>
-<td>${qty}</td>
-<td>${delivery}</td>
-<td>${profit.toFixed(2)}</td>
-</tr>
-`
-
-}
-
-/* CHARTS */
-
-let salesChart
-let profitChart
-let dailyChart
+let salesChart,profitChart,dailyChart
 
 function updateCharts(){
 
 let months=Object.keys(monthlySales)
-let salesData=Object.values(monthlySales)
-let profitData=Object.values(monthlyProfit)
+let salesDataArr=Object.values(monthlySales)
+let profitDataArr=Object.values(monthlyProfit)
 
 let days=Object.keys(dailySales)
-let dailyData=Object.values(dailySales)
+let dailyDataArr=Object.values(dailySales)
 
 if(salesChart){
 salesChart.destroy()
@@ -585,25 +587,19 @@ profitChart.destroy()
 dailyChart.destroy()
 }
 
-salesChart=new Chart(
-document.getElementById("salesChart"),
-{
+salesChart=new Chart(document.getElementById("salesChart"),{
 type:"line",
-data:{labels:months,datasets:[{label:"Sales",data:salesData,borderWidth:3}]}
+data:{labels:months,datasets:[{label:"Sales",data:salesDataArr}]}
 })
 
-profitChart=new Chart(
-document.getElementById("profitChart"),
-{
+profitChart=new Chart(document.getElementById("profitChart"),{
 type:"line",
-data:{labels:months,datasets:[{label:"Profit",data:profitData,borderWidth:3}]}
+data:{labels:months,datasets:[{label:"Profit",data:profitDataArr}]}
 })
 
-dailyChart=new Chart(
-document.getElementById("dailyChart"),
-{
+dailyChart=new Chart(document.getElementById("dailyChart"),{
 type:"line",
-data:{labels:days,datasets:[{label:"Daily Sales",data:dailyData,borderWidth:3}]}
+data:{labels:days,datasets:[{label:"Daily",data:dailyDataArr}]}
 })
 
 }
