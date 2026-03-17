@@ -3,7 +3,7 @@
 <head>
 
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Nuno Wears Pro Dashboard</title>
+<title>Nuno Wears</title>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
@@ -16,33 +16,29 @@ margin:0;
 font-family:-apple-system,BlinkMacSystemFont,"Segoe UI";
 background:linear-gradient(135deg,#0f0f0f,#000);
 color:white;
+overflow-x:hidden;
+}
+
+/* glass effect */
+
+.glass{
+background:rgba(255,255,255,0.08);
+backdrop-filter:blur(10px);
+border-radius:15px;
 }
 
 /* header */
 
-.header{
-text-align:center;
-padding:20px;
-}
+.header{text-align:center;padding:20px;}
 
-.logo{
-width:140px;
-display:block;
-margin:auto;
-}
+.logo{width:140px;margin:auto;display:block;}
 
 /* layout */
 
-.container{
-display:flex;
-gap:15px;
-padding:15px;
-}
+.container{display:flex;gap:15px;padding:15px;}
 
 .sidebar{
 width:200px;
-background:rgba(255,255,255,0.05);
-border-radius:15px;
 padding:10px;
 }
 
@@ -57,23 +53,20 @@ color:white;
 cursor:pointer;
 }
 
-.main{
-flex:1;
-min-width:0;
-}
+/* main */
+
+.main{flex:1;min-width:0;}
 
 /* cards */
 
 .cards{
 display:grid;
 grid-template-columns:repeat(5,1fr);
-gap:10px;
+gap:12px;
 }
 
 .card{
-padding:12px;
-border-radius:12px;
-background:rgba(255,255,255,0.07);
+padding:15px;
 text-align:center;
 }
 
@@ -82,14 +75,15 @@ text-align:center;
 .panel{
 margin-top:15px;
 padding:15px;
-border-radius:15px;
-background:rgba(255,255,255,0.05);
 }
+
+/* form */
 
 .form-grid{
 display:grid;
 grid-template-columns:repeat(6,1fr);
 gap:8px;
+margin-bottom:10px;
 }
 
 input,select{
@@ -101,25 +95,35 @@ color:white;
 width:100%;
 }
 
-button.action{
-padding:8px;
+/* glass button */
+
+.btn{
+padding:8px 12px;
 border:none;
-border-radius:8px;
-background:rgba(255,255,255,0.25);
+border-radius:10px;
+background:rgba(255,255,255,0.15);
 color:white;
 cursor:pointer;
+backdrop-filter:blur(8px);
+}
+
+/* delete icon */
+
+.delete-btn{
+background:none;
+border:none;
+cursor:pointer;
+font-size:14px;
 }
 
 /* table */
 
-.table-container{
-overflow-x:auto;
-}
+.table-wrap{overflow-x:auto;}
 
 table{
 width:100%;
 border-collapse:collapse;
-min-width:700px;
+min-width:650px;
 }
 
 th,td{
@@ -133,10 +137,7 @@ border-bottom:1px solid rgba(255,255,255,0.15);
 
 /* low stock */
 
-.low{
-color:red;
-font-weight:bold;
-}
+.low{color:#ff6b6b;}
 
 /* section */
 
@@ -155,11 +156,7 @@ width:100%;
 overflow:auto;
 }
 
-.sidebar button{
-flex:1;
-font-size:12px;
-margin:3px;
-}
+.sidebar button{flex:1;font-size:12px;}
 
 .cards{grid-template-columns:1fr 1fr;}
 .form-grid{grid-template-columns:1fr 1fr;}
@@ -173,12 +170,12 @@ margin:3px;
 
 <div class="header">
 <img src="logo.png" class="logo">
-<h2>Nuno Wears</h2>
+<h2>Nuno Wears Dashboard</h2>
 </div>
 
 <div class="container">
 
-<div class="sidebar">
+<div class="sidebar glass">
 <button onclick="show('dashboard')">Dashboard</button>
 <button onclick="show('sales')">Sales</button>
 <button onclick="show('investment')">Investment</button>
@@ -193,104 +190,96 @@ margin:3px;
 <div id="dashboard" class="section active">
 <div class="cards">
 
-<div class="card">Sales<br><span id="salesTotal">₹0</span></div>
-<div class="card">Investment<br><span id="investmentTotal">₹0</span></div>
-<div class="card">Profit<br><span id="profitTotal">₹0</span></div>
-<div class="card">Sold<br><span id="shirtSold">0</span></div>
-<div class="card">Delivery<br><span id="deliveryTotal">₹0</span></div>
+<div class="card glass">Sales<br><span id="salesTotal">₹0</span></div>
+<div class="card glass">Investment<br><span id="investmentTotal">₹0</span></div>
+<div class="card glass">Profit<br><span id="profitTotal">₹0</span></div>
+<div class="card glass">Sold<br><span id="shirtSold">0</span></div>
+<div class="card glass">Delivery<br><span id="deliveryTotal">₹0</span></div>
 
 </div>
 </div>
 
 <!-- SALES -->
 
-<div id="sales" class="section panel">
+<div id="sales" class="section panel glass">
 
 <div class="form-grid">
-
 <input type="date" id="date">
 <select id="design"></select>
 <input type="number" id="price" placeholder="Price">
 <input type="number" id="qty" placeholder="Qty">
 <input type="number" id="delivery" placeholder="Delivery">
-
 <select id="paid">
 <option value="customer">Customer</option>
 <option value="company">Company</option>
 </select>
-
-<button class="action" onclick="addSale()">Add</button>
-
+<button class="btn" onclick="addSale()">Add</button>
 </div>
 
-<div class="table-container">
+<div class="table-wrap">
 <table>
 <thead>
 <tr>
 <th>Date</th><th>Design</th><th>Price</th><th>Qty</th>
-<th>Delivery</th><th>Profit</th><th>Delete</th>
+<th>Delivery</th><th>Profit</th><th></th>
 </tr>
 </thead>
 <tbody id="salesTable"></tbody>
 </table>
 </div>
 
-<button onclick="undoDelete('sales')">Undo Delete</button>
+<button class="btn" onclick="undoDelete('sales')">Undo</button>
 
 </div>
 
 <!-- INVESTMENT -->
 
-<div id="investment" class="section panel">
+<div id="investment" class="section panel glass">
 
 <div class="form-grid">
-
 <input type="month" id="month">
 <input type="number" id="purchase" placeholder="Purchase">
 <input type="number" id="printing" placeholder="Printing">
 <input type="number" id="packing" placeholder="Packing">
 <input type="number" id="count" placeholder="Qty">
-
-<button onclick="addInvestment()">Add</button>
-
+<button class="btn" onclick="addInvestment()">Add</button>
 </div>
 
+<div class="table-wrap">
 <table>
 <tbody id="investmentTable"></tbody>
 </table>
+</div>
 
-<button onclick="undoDelete('investment')">Undo Delete</button>
+<button class="btn" onclick="undoDelete('investment')">Undo</button>
 
 </div>
 
 <!-- INVENTORY -->
 
-<div id="inventory" class="section panel">
+<div id="inventory" class="section panel glass">
 
 <div class="form-grid">
-
 <input id="dname" placeholder="Design">
 <input id="dqty" type="number" placeholder="Qty">
-
-<button onclick="addInventory()">Add</button>
-
+<button class="btn" onclick="addInventory()">Add</button>
 </div>
 
+<div class="table-wrap">
 <table>
 <tbody id="inventoryTable"></tbody>
 </table>
+</div>
 
-<button onclick="undoDelete('inventory')">Undo Delete</button>
+<button class="btn" onclick="undoDelete('inventory')">Undo</button>
 
 </div>
 
 <!-- ANALYTICS -->
 
-<div id="analytics" class="section panel">
-
-<canvas id="salesChart"></canvas>
+<div id="analytics" class="section panel glass">
 <canvas id="dailyChart"></canvas>
-
+<canvas id="monthlyChart"></canvas>
 </div>
 
 </div>
@@ -298,7 +287,7 @@ margin:3px;
 
 <script>
 
-/* navigation */
+/* nav */
 
 function show(id){
 document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"))
@@ -307,11 +296,8 @@ document.getElementById(id).classList.add("active")
 
 /* data */
 
-let salesData=[]
-let investmentData=[]
-let inventoryData=[]
-
-let deletedStack={sales:[],investment:[],inventory:[]}
+let salesData=[], investmentData=[], inventoryData=[]
+let deleted={sales:[],investment:[],inventory:[]}
 
 /* inventory */
 
@@ -322,25 +308,18 @@ updateDesign()
 }
 
 function renderInventory(){
-
 inventoryTable.innerHTML=""
-
 inventoryData.forEach((i,ind)=>{
-
 let rem=i.printed-i.sold
-let lowClass = rem<=5 ? "low" : ""
-
 inventoryTable.innerHTML+=`
-<tr class="${lowClass}">
+<tr>
 <td>${i.name}</td>
 <td>${i.printed}</td>
 <td>${i.sold}</td>
-<td>${rem}</td>
-<td><button onclick="del('inventory',${ind})">❌</button></td>
-</tr>
-`
+<td class="${rem<=5?'low':''}">${rem}</td>
+<td><button class="delete-btn" onclick="del('inventory',${ind})">🗑</button></td>
+</tr>`
 })
-
 }
 
 function updateDesign(){
@@ -356,15 +335,12 @@ design.appendChild(op)
 /* sales */
 
 function addSale(){
-
 let item=inventoryData.find(i=>i.name===design.value)
-
-if(item.printed-item.sold<qty.value){alert("No stock");return;}
+if(!item || item.printed-item.sold<qty.value){alert("No stock");return;}
 
 item.sold+=+qty.value
 
-let profit=(price.value)*qty.value
-
+let profit=(price.value*qty.value)
 if(paid.value==="company") profit-=+delivery.value
 
 salesData.push({
@@ -377,19 +353,44 @@ paid:paid.value,
 profit
 })
 
+renderAll()
+}
+
+/* investment */
+
+function addInvestment(){
+let total=+purchase.value + +printing.value + +packing.value
+investmentData.push({month:month.value,total})
+renderAll()
+}
+
+/* delete + undo */
+
+function del(type,index){
+deleted[type].push(JSON.parse(JSON.stringify(eval(type+"Data")[index])))
+eval(type+"Data").splice(index,1)
+renderAll()
+}
+
+function undoDelete(type){
+if(!deleted[type].length) return
+eval(type+"Data").push(deleted[type].pop())
+renderAll()
+}
+
+/* render */
+
+function renderAll(){
 renderSales()
+renderInvestment()
 renderInventory()
 updateDashboard()
-updateChart()
-
+updateCharts()
 }
 
 function renderSales(){
-
 salesTable.innerHTML=""
-
 salesData.forEach((s,i)=>{
-
 salesTable.innerHTML+=`
 <tr>
 <td>${s.date}</td>
@@ -398,72 +399,21 @@ salesTable.innerHTML+=`
 <td>${s.qty}</td>
 <td>${s.delivery}</td>
 <td>${s.profit}</td>
-<td><button onclick="del('sales',${i})">❌</button></td>
-</tr>
-`
-
+<td><button class="delete-btn" onclick="del('sales',${i})">🗑</button></td>
+</tr>`
 })
-
-}
-
-/* investment */
-
-function addInvestment(){
-
-let total=+purchase.value + +printing.value + +packing.value
-
-investmentData.push({
-month:month.value,
-total
-})
-
-renderInvestment()
-updateDashboard()
-
 }
 
 function renderInvestment(){
-
 investmentTable.innerHTML=""
-
 investmentData.forEach((i,ind)=>{
-
 investmentTable.innerHTML+=`
 <tr>
 <td>${i.month}</td>
 <td>${i.total}</td>
-<td><button onclick="del('investment',${ind})">❌</button></td>
-</tr>
-`
-
+<td><button class="delete-btn" onclick="del('investment',${ind})">🗑</button></td>
+</tr>`
 })
-
-}
-
-/* delete + undo */
-
-function del(type,index){
-
-deletedStack[type].push(eval(type+"Data")[index])
-eval(type+"Data").splice(index,1)
-
-renderAll()
-}
-
-function undoDelete(type){
-
-if(deletedStack[type].length===0) return
-
-eval(type+"Data").push(deletedStack[type].pop())
-
-renderAll()
-}
-
-function renderAll(){
-renderSales()
-renderInventory()
-renderInvestment()
-updateDashboard()
 }
 
 /* dashboard */
@@ -486,29 +436,33 @@ profitTotal.innerText="₹"+profit
 investmentTotal.innerText="₹"+invest
 shirtSold.innerText=sold
 deliveryTotal.innerText="₹"+delivery
-
 }
 
-/* chart */
+/* charts */
 
-let chart
+let dailyChart,monthlyChart
 
-function updateChart(){
+function updateCharts(){
 
-let data={}
+let daily={},monthly={}
 
 salesData.forEach(s=>{
-data[s.date]=(data[s.date]||0)+(s.price*s.qty)
+daily[s.date]=(daily[s.date]||0)+(s.price*s.qty)
+let m=s.date.slice(0,7)
+monthly[m]=(monthly[m]||0)+(s.price*s.qty)
 })
 
-let labels=Object.keys(data)
-let values=Object.values(data)
+if(dailyChart) dailyChart.destroy()
+if(monthlyChart) monthlyChart.destroy()
 
-if(chart) chart.destroy()
-
-chart=new Chart(document.getElementById("dailyChart"),{
+dailyChart=new Chart(document.getElementById("dailyChart"),{
 type:"line",
-data:{labels:labels,datasets:[{data:values,label:"Daily Sales"}]}
+data:{labels:Object.keys(daily),datasets:[{label:"Daily",data:Object.values(daily)}]}
+})
+
+monthlyChart=new Chart(document.getElementById("monthlyChart"),{
+type:"bar",
+data:{labels:Object.keys(monthly),datasets:[{label:"Monthly",data:Object.values(monthly)}]}
 })
 
 }
