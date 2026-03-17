@@ -19,8 +19,7 @@ color:white;
 overflow-x:hidden;
 }
 
-/* glass */
-
+/* GLASS UI */
 .glass{
 background:rgba(255,255,255,0.06);
 backdrop-filter:blur(18px);
@@ -28,13 +27,11 @@ border:1px solid rgba(255,255,255,0.1);
 border-radius:15px;
 }
 
-/* header */
-
+/* HEADER */
 .header{text-align:center;padding:20px;}
-.logo{width:140px;margin:auto;display:block;}
+.logo{width:140px;display:block;margin:auto;}
 
-/* layout */
-
+/* LAYOUT */
 .container{display:flex;gap:15px;padding:15px;}
 
 .sidebar{
@@ -42,7 +39,6 @@ width:220px;
 padding:15px;
 position:sticky;
 top:10px;
-height:fit-content;
 }
 
 .sidebar button{
@@ -56,39 +52,37 @@ color:white;
 cursor:pointer;
 }
 
-/* mobile navbar fix */
-
+/* MOBILE NAV */
 @media(max-width:900px){
-
 .container{flex-direction:column;}
 
 .sidebar{
 display:flex;
-width:100%;
 overflow-x:auto;
 gap:6px;
-padding:8px;
+width:100%;
 }
 
 .sidebar button{
 flex:1;
 min-width:90px;
 font-size:12px;
-white-space:nowrap;
+}
 }
 
-}
-
-/* main */
-
+/* MAIN */
 .main{flex:1;min-width:0;}
 
-/* cards */
-
+/* DASHBOARD CARDS */
 .cards{
 display:grid;
 grid-template-columns:repeat(5,1fr);
 gap:12px;
+}
+
+@media(max-width:900px){
+.cards{grid-template-columns:repeat(2,1fr);}
+.card:last-child{grid-column:span 2;}
 }
 
 .card{
@@ -96,20 +90,25 @@ padding:15px;
 text-align:center;
 }
 
-/* panel */
+/* PANEL */
+.panel{margin-top:15px;padding:15px;}
 
-.panel{
-margin-top:15px;
-padding:15px;
-}
-
-/* form */
-
+/* FORMS */
 .form-grid{
 display:grid;
 grid-template-columns:repeat(6,1fr);
 gap:8px;
 margin-bottom:10px;
+}
+
+@media(max-width:900px){
+.form-grid{
+grid-template-columns:repeat(2,1fr);
+gap:10px;
+}
+.form-grid button{
+grid-column:span 2;
+}
 }
 
 input,select{
@@ -119,10 +118,10 @@ border-radius:6px;
 background:rgba(255,255,255,0.1);
 color:white;
 width:100%;
+font-size:14px;
 }
 
-/* buttons */
-
+/* BUTTONS */
 .btn{
 padding:8px 12px;
 border:none;
@@ -130,7 +129,6 @@ border-radius:10px;
 background:rgba(255,255,255,0.15);
 color:white;
 cursor:pointer;
-backdrop-filter:blur(8px);
 }
 
 .delete-btn{
@@ -140,16 +138,14 @@ cursor:pointer;
 font-size:14px;
 }
 
-/* undo align */
-
+/* UNDO ALIGN */
 .undo-wrap{
 display:flex;
 justify-content:flex-end;
 margin-top:10px;
 }
 
-/* table */
-
+/* TABLE */
 .table-wrap{overflow-x:auto;}
 
 table{
@@ -164,20 +160,18 @@ text-align:center;
 }
 
 th{
-font-weight:500;
 opacity:0.8;
+font-weight:500;
 }
 
 tr{
 border-bottom:1px solid rgba(255,255,255,0.15);
 }
 
-/* low stock */
-
+/* LOW STOCK */
 .low{color:#ff6b6b;}
 
-/* section */
-
+/* SECTIONS */
 .section{display:none;}
 .active{display:block;}
 
@@ -204,21 +198,17 @@ border-bottom:1px solid rgba(255,255,255,0.15);
 <div class="main">
 
 <!-- DASHBOARD -->
-
 <div id="dashboard" class="section active">
 <div class="cards">
-
 <div class="card glass">Sales<br><span id="salesTotal">₹0</span></div>
 <div class="card glass">Investment<br><span id="investmentTotal">₹0</span></div>
 <div class="card glass">Profit<br><span id="profitTotal">₹0</span></div>
 <div class="card glass">Sold<br><span id="shirtSold">0</span></div>
 <div class="card glass">Delivery<br><span id="deliveryTotal">₹0</span></div>
-
 </div>
 </div>
 
 <!-- SALES -->
-
 <div id="sales" class="section panel glass">
 
 <div class="form-grid">
@@ -253,7 +243,6 @@ border-bottom:1px solid rgba(255,255,255,0.15);
 </div>
 
 <!-- INVESTMENT -->
-
 <div id="investment" class="section panel glass">
 
 <div class="form-grid">
@@ -290,7 +279,6 @@ border-bottom:1px solid rgba(255,255,255,0.15);
 </div>
 
 <!-- INVENTORY -->
-
 <div id="inventory" class="section panel glass">
 
 <div class="form-grid">
@@ -321,7 +309,6 @@ border-bottom:1px solid rgba(255,255,255,0.15);
 </div>
 
 <!-- ANALYTICS -->
-
 <div id="analytics" class="section panel glass">
 <canvas id="dailyChart"></canvas>
 <canvas id="monthlyChart"></canvas>
@@ -332,23 +319,23 @@ border-bottom:1px solid rgba(255,255,255,0.15);
 
 <script>
 
-/* nav */
+/* NAV */
 function show(id){
 document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"))
 document.getElementById(id).classList.add("active")
 }
 
-/* data */
-let salesData=[], investmentData=[], inventoryData=[]
+/* DATA */
+let salesData=[],investmentData=[],inventoryData=[]
 let deleted={sales:[],investment:[],inventory:[]}
 
-/* inventory */
+/* INVENTORY */
 function addInventory(){
 inventoryData.push({name:dname.value,printed:+dqty.value,sold:0})
 renderAll()
 }
 
-/* sales */
+/* SALES */
 function addSale(){
 let item=inventoryData.find(i=>i.name===design.value)
 if(!item || item.printed-item.sold<qty.value){alert("No stock");return;}
@@ -359,35 +346,26 @@ let profit=(price.value*qty.value)
 if(paid.value==="company") profit-=+delivery.value
 
 salesData.push({
-date:date.value,
-design:design.value,
-price:+price.value,
-qty:+qty.value,
-delivery:+delivery.value,
-paid:paid.value,
+date:date.value,design:design.value,
+price:+price.value,qty:+qty.value,
+delivery:+delivery.value,paid:paid.value,
 profit
 })
 
 renderAll()
 }
 
-/* investment */
+/* INVESTMENT */
 function addInvestment(){
-
-let purchaseVal=+purchase.value
-let printingVal=+printing.value
-let packingVal=+packing.value
-let qtyVal=+count.value
-
-let total=purchaseVal+printingVal+packingVal
-let cost= total/qtyVal
+let total=+purchase.value+ +printing.value+ +packing.value
+let cost= total / +count.value
 
 investmentData.push({
 month:month.value,
-purchase:purchaseVal,
-printing:printingVal,
-packing:packingVal,
-qty:qtyVal,
+purchase:+purchase.value,
+printing:+printing.value,
+packing:+packing.value,
+qty:+count.value,
 cost:cost,
 total:total
 })
@@ -395,27 +373,22 @@ total:total
 renderAll()
 }
 
-/* delete + undo */
-function del(type,index){
-deleted[type].push(JSON.parse(JSON.stringify(eval(type+"Data")[index])))
-eval(type+"Data").splice(index,1)
+/* DELETE + UNDO */
+function del(type,i){
+deleted[type].push(JSON.parse(JSON.stringify(eval(type+"Data")[i])))
+eval(type+"Data").splice(i,1)
 renderAll()
 }
-
 function undoDelete(type){
-if(!deleted[type].length) return
+if(!deleted[type].length)return
 eval(type+"Data").push(deleted[type].pop())
 renderAll()
 }
 
-/* render */
+/* RENDER */
 function renderAll(){
-renderSales()
-renderInvestment()
-renderInventory()
-updateDesign()
-updateDashboard()
-updateCharts()
+renderSales();renderInvestment();renderInventory();
+updateDesign();updateDashboard();updateCharts();
 }
 
 function renderSales(){
@@ -423,11 +396,8 @@ salesTable.innerHTML=""
 salesData.forEach((s,i)=>{
 salesTable.innerHTML+=`
 <tr>
-<td>${s.date}</td>
-<td>${s.design}</td>
-<td>${s.price}</td>
-<td>${s.qty}</td>
-<td>${s.delivery}</td>
+<td>${s.date}</td><td>${s.design}</td><td>${s.price}</td>
+<td>${s.qty}</td><td>${s.delivery}</td>
 <td>${s.profit}</td>
 <td><button class="delete-btn" onclick="del('sales',${i})">🗑</button></td>
 </tr>`
@@ -439,12 +409,9 @@ investmentTable.innerHTML=""
 investmentData.forEach((i,ind)=>{
 investmentTable.innerHTML+=`
 <tr>
-<td>${i.month}</td>
-<td>${i.purchase}</td>
-<td>${i.printing}</td>
-<td>${i.packing}</td>
-<td>${i.qty}</td>
-<td>${i.cost.toFixed(2)}</td>
+<td>${i.month}</td><td>${i.purchase}</td>
+<td>${i.printing}</td><td>${i.packing}</td>
+<td>${i.qty}</td><td>${i.cost.toFixed(2)}</td>
 <td>${i.total}</td>
 <td><button class="delete-btn" onclick="del('investment',${ind})">🗑</button></td>
 </tr>`
@@ -457,8 +424,7 @@ inventoryData.forEach((i,ind)=>{
 let rem=i.printed-i.sold
 inventoryTable.innerHTML+=`
 <tr>
-<td>${i.name}</td>
-<td>${i.printed}</td>
+<td>${i.name}</td><td>${i.printed}</td>
 <td>${i.sold}</td>
 <td class="${rem<=5?'low':''}">${rem}</td>
 <td><button class="delete-btn" onclick="del('inventory',${ind})">🗑</button></td>
@@ -476,9 +442,8 @@ design.appendChild(op)
 })
 }
 
-/* dashboard */
+/* DASHBOARD */
 function updateDashboard(){
-
 let sales=0,profit=0,delivery=0,sold=0,invest=0
 
 salesData.forEach(s=>{
@@ -497,7 +462,7 @@ shirtSold.innerText=sold
 deliveryTotal.innerText="₹"+delivery
 }
 
-/* charts */
+/* CHARTS */
 let dailyChart,monthlyChart
 
 function updateCharts(){
@@ -513,14 +478,16 @@ monthly[m]=(monthly[m]||0)+(s.price*s.qty)
 if(dailyChart) dailyChart.destroy()
 if(monthlyChart) monthlyChart.destroy()
 
-dailyChart=new Chart(document.getElementById("dailyChart"),{
+dailyChart=new Chart(dailyChart=document.getElementById("dailyChart"),{
 type:"line",
-data:{labels:Object.keys(daily),datasets:[{label:"Daily Sales",data:Object.values(daily)}]}
+data:{labels:Object.keys(daily),
+datasets:[{label:"Daily Sales",data:Object.values(daily)}]}
 })
 
 monthlyChart=new Chart(document.getElementById("monthlyChart"),{
 type:"bar",
-data:{labels:Object.keys(monthly),datasets:[{label:"Monthly Sales",data:Object.values(monthly)}]}
+data:{labels:Object.keys(monthly),
+datasets:[{label:"Monthly Sales",data:Object.values(monthly)}]}
 })
 
 }
