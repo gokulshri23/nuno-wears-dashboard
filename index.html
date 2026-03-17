@@ -321,6 +321,15 @@ border-bottom:1px solid rgba(255,255,255,0.15);
 let salesData = [];
 let investmentData = [];
 let inventoryData = [];
+let deleted={sales:[],investment:[],inventory:[]}
+
+/* NAV */
+function show(id){
+document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"))
+document.getElementById(id).classList.add("active")
+}
+
+/* FIREBASE SAVE */
 async function saveData() {
   await db.collection("nunoData").doc("main").set({
     salesData,
@@ -328,6 +337,8 @@ async function saveData() {
     inventoryData
   });
 }
+
+/* FIREBASE LOAD */
 async function loadData() {
   const doc = await db.collection("nunoData").doc("main").get();
 
@@ -338,23 +349,17 @@ async function loadData() {
     investmentData = data.investmentData || [];
     inventoryData = data.inventoryData || [];
 
-    renderAll(); // VERY IMPORTANT (refresh UI)
+    renderAll();
   }
 }
 
-/* NAV */
-function show(id){
-document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"))
-document.getElementById(id).classList.add("active")
-}
-
-/* DATA */
-let salesData=[],investmentData=[],inventoryData=[]
-let deleted={sales:[],investment:[],inventory:[]}
-
 /* INVENTORY */
 function addInventory(){
-inventoryData.push({name:dname.value,printed:+dqty.value,sold:0})
+inventoryData.push({
+  name:dname.value,
+  printed:+dqty.value,
+  sold:0
+})
 saveData()
 renderAll()
 }
@@ -362,7 +367,11 @@ renderAll()
 /* SALES */
 function addSale(){
 let item=inventoryData.find(i=>i.name===design.value)
-if(!item || item.printed-item.sold<qty.value){alert("No stock");return;}
+
+if(!item || item.printed-item.sold<qty.value){
+  alert("No stock");
+  return;
+}
 
 item.sold+=+qty.value
 
@@ -370,11 +379,15 @@ let profit=(price.value*qty.value)
 if(paid.value==="company") profit-=+delivery.value
 
 salesData.push({
-date:date.value,design:design.value,
-price:+price.value,qty:+qty.value,
-delivery:+delivery.value,paid:paid.value,
+date:date.value,
+design:design.value,
+price:+price.value,
+qty:+qty.value,
+delivery:+delivery.value,
+paid:paid.value,
 profit
 })
+
 saveData()
 renderAll()
 }
@@ -393,8 +406,8 @@ qty:+count.value,
 cost:cost,
 total:total
 })
-saveData()
 
+saveData()
 renderAll()
 }
 
@@ -402,19 +415,28 @@ renderAll()
 function del(type,i){
 deleted[type].push(JSON.parse(JSON.stringify(eval(type+"Data")[i])))
 eval(type+"Data").splice(i,1)
+
 saveData()
 renderAll()
 }
+
 function undoDelete(type){
 if(!deleted[type].length)return
+
 eval(type+"Data").push(deleted[type].pop())
+
+saveData()   // 🔥 FIXED (important)
 renderAll()
 }
 
 /* RENDER */
 function renderAll(){
-renderSales();renderInvestment();renderInventory();
-updateDesign();updateDashboard();updateCharts();
+renderSales()
+renderInvestment()
+renderInventory()
+updateDesign()
+updateDashboard()
+updateCharts()
 }
 
 function renderSales(){
@@ -422,8 +444,11 @@ salesTable.innerHTML=""
 salesData.forEach((s,i)=>{
 salesTable.innerHTML+=`
 <tr>
-<td>${s.date}</td><td>${s.design}</td><td>${s.price}</td>
-<td>${s.qty}</td><td>${s.delivery}</td>
+<td>${s.date}</td>
+<td>${s.design}</td>
+<td>${s.price}</td>
+<td>${s.qty}</td>
+<td>${s.delivery}</td>
 <td>${s.profit}</td>
 <td><button class="delete-btn" onclick="del('sales',${i})">🗑</button></td>
 </tr>`
@@ -435,9 +460,12 @@ investmentTable.innerHTML=""
 investmentData.forEach((i,ind)=>{
 investmentTable.innerHTML+=`
 <tr>
-<td>${i.month}</td><td>${i.purchase}</td>
-<td>${i.printing}</td><td>${i.packing}</td>
-<td>${i.qty}</td><td>${i.cost.toFixed(2)}</td>
+<td>${i.month}</td>
+<td>${i.purchase}</td>
+<td>${i.printing}</td>
+<td>${i.packing}</td>
+<td>${i.qty}</td>
+<td>${i.cost.toFixed(2)}</td>
 <td>${i.total}</td>
 <td><button class="delete-btn" onclick="del('investment',${ind})">🗑</button></td>
 </tr>`
@@ -450,7 +478,8 @@ inventoryData.forEach((i,ind)=>{
 let rem=i.printed-i.sold
 inventoryTable.innerHTML+=`
 <tr>
-<td>${i.name}</td><td>${i.printed}</td>
+<td>${i.name}</td>
+<td>${i.printed}</td>
 <td>${i.sold}</td>
 <td class="${rem<=5?'low':''}">${rem}</td>
 <td><button class="delete-btn" onclick="del('inventory',${ind})">🗑</button></td>
@@ -504,19 +533,43 @@ monthly[m]=(monthly[m]||0)+(s.price*s.qty)
 if(dailyChart) dailyChart.destroy()
 if(monthlyChart) monthlyChart.destroy()
 
-dailyChart=new Chart(dailyChart=document.getElementById("dailyChart"),{
+dailyChart=new Chart(document.getElementById("dailyChart"),{
 type:"line",
-data:{labels:Object.keys(daily),
-datasets:[{label:"Daily Sales",data:Object.values(daily)}]}
+data:{
+labels:Object.keys(daily),
+datasets:[{label:"Daily Sales",data:Object.values(daily)}]
+}
 })
 
 monthlyChart=new Chart(document.getElementById("monthlyChart"),{
 type:"bar",
-data:{labels:Object.keys(monthly),
-datasets:[{label:"Monthly Sales",data:Object.values(monthly)}]}
+data:{
+labels:Object.keys(monthly),
+datasets:[{label:"Monthly Sales",data:Object.values(monthly)}]
+}
 })
 
 }
+</script>
+
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
+<script>
+const firebaseConfig = {
+  apiKey: "YOUR_API_KEY",
+  authDomain: "nuno-wears-dashboard.firebaseapp.com",
+  projectId: "nuno-wears-dashboard",
+  storageBucket: "nuno-wears-dashboard.firebasestorage.app",
+  messagingSenderId: "405785694817",
+  appId: "1:405785694817:web:80ac1e6c436c0636f75020"
+};
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
+/* 🔥 LOAD AFTER FIREBASE READY */
 loadData();
 </script>
 <!-- Firebase -->
